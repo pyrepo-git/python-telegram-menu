@@ -1,0 +1,21 @@
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | .eggs
+  | build
+)/
+'''
+
+[tool.check-manifest]
+ignore = [
+    'examples/**',
+    'tests/**',
+    'binder/**',
+    '.*',
+    'pyproject.toml',
+    'pytest.ini',
+    'CODE_OF_CONDUCT.md',
+]
