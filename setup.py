@@ -17,5 +17,5 @@ extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
 
 setup(
     extras_require=extras_require,
-    entry_points={"console_scripts": ["libname=libname.commandline:libname"]},
+    entry_points={"console_scripts": ["python-telegram-menu=python-telegram-menu.commandline:python-telegram-menu"]},
 )

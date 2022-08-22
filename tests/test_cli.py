@@ -1,10 +1,10 @@
 import shlex
-import libname
+import python-telegram-menu
 import time
 
 
 def test_version(script_runner):
-    command = "libname --version"
+    command = "python-telegram-menu --version"
     start = time.time()
     ret = script_runner.run(*shlex.split(command))
     end = time.time()
