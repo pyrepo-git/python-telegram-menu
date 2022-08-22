@@ -1,4 +1,4 @@
-"""Define python-telegram-menu version information."""
+"""python-telegram-menu version information."""
 
 # Use semantic versioning (https://semver.org/)
 # The version number is controlled through bumpversion.cfg
