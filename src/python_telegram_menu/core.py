@@ -19,7 +19,7 @@ from telegram import InlineKeyboardMarkUp, KeyboardButton
 from telegram import ReplyKeyboardMarkup, WepAppInfo
 
 # if TYPE_CHECKING:
-#    from python-telegram-menu import NavigationHandler
+#    from python_telegram_menu import NavigationHandler
 
 logger = logging.initLogger(__name__)
 
@@ -130,7 +130,7 @@ class AbstractMessage(ABC):
         """
         raise NotImplementedError
 
-    def textInput(self, text: str) -> None:
+    def text_input(self, text: str) -> None:
         """
         Recieive text from console.
 
@@ -140,7 +140,7 @@ class AbstractMessage(ABC):
         - text: text received from console
         """
 
-    def getButton(self, label: str) -> Optional[ButtonDef]:
+    def get_button(self, label: str) -> Optional[ButtonDef]:
         """
         Get button matching given label/
 
@@ -155,10 +155,10 @@ class AbstractMessage(ABC):
         """
         return next(iter(y for x in self.keyboard for y in x if y.label == label), None)
 
-    def addButtonBack(self, **kwargs: Any) -> None:
+    def add_button_back(self, **kwargs: Any) -> None:
         """Add a button to go back to previous menu."""
         self.addButton(label="Back", callback=None, **kwargs)
 
-    def addButtonHome(self, **kwargs) -> None:
+    def add_button_home(self, **kwargs) -> None:
         """Add a button to go back to main menu."""
         self.addButton(label="Home", collback=None, **kwargs)
