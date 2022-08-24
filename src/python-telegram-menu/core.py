@@ -97,7 +97,7 @@ class AbstractMessage(ABC):
             notification: bool = True,
             input_field: str = "",
             **args: Any,
-    ) -> None
+    ) -> None:
         self.keyboard: TypeKeyboard = {{}}
         self.label = emoji_replace(label)
         self.inlined = inlined
