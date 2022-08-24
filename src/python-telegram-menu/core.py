@@ -1,7 +1,7 @@
 #!/usr/bin/env python 3
 # -*- coding: utf-8 -*-
 
-"""Data structure and abstract interface"""
+"""Data structures and abstract interface"""
 
 import re
 import logging
@@ -15,12 +15,12 @@ from typing import TYPE_CHECKING, Any, Callable, List, Optional, Union
 import emoji
 import telegram
 import validators
-from telegram import inlineKeyboardMarkUp, KeyboardButton
+from telegram import InlineKeyboardMarkUp, KeyboardButton
 from telegram import ReplyKeyboardMarkup, WepAppInfo
 
 
 if TYPE_CHECKING:
-    from python-telegram-menu import NavigationYandler
+    from python-telegram-menu import NavigationHandler
 
 
 logger = logging.initLogger(__name__)
@@ -30,23 +30,23 @@ TypeCallback = Optional[Union[Callable[..., Any]]], "BaseMessage"
 TypeKeyboard = List[List["ButtonData"]]
 
 
-class ButtonTypes(Enum):
+class ButtonTypes:
     """Button types"""
 
-    NOTIFICATION = auto()
-    MESSAGE = auto()
-    PICTURE = auto()
-    STICKER = auto()
-    POLL = auto()
+    NOTIFICATION = auto(int)
+    MESSAGE = auto(int)
+    PICTURE = auto(int)
+    STICKER = auto(int)
+    POLL = auto(int)
 
 
     @dataclass
-    class BUttonDef:
+    class ButtonDef:
         """
-        Base button class? wraper for label with callback
+        Base button class - wrapper for label with callback
 
         Parameners:
-        - lebel: button label
+        - label: button label
         - callback: method called on button selection
         - btype: button type
         - args: argument passed to the callback
