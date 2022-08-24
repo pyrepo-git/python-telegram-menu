@@ -18,16 +18,20 @@ import validators
 from telegram import InlineKeyboardMarkUp, KeyboardButton
 from telegram import ReplyKeyboardMarkup, WepAppInfo
 
-if TYPE_CHECKING:
-    from python
-
-    -telegram - menu
-    import NavigationHandler
+# if TYPE_CHECKING:
+#    from python-telegram-menu import NavigationHandler
 
 logger = logging.initLogger(__name__)
 
 TypeCallback = Optional[Union[Callable[..., Any]]], "BaseMessage"
 TypeKeyboard = List[List["ButtonData"]]
+
+
+class ButtonAction:
+    """Button types"""
+
+    HOME = auto(int)
+    BACK = auto(int)
 
 
 class ButtonTypes:
@@ -39,12 +43,13 @@ class ButtonTypes:
     STICKER = auto(int)
     POLL = auto(int)
 
-    @dataclass
-    class ButtonDef:
-        """
-        Base button class - wrapper for label with callback
 
-        Parameters:
+@dataclass
+class ButtonDef:
+    """
+    Base button class - wrapper for label with callback
+
+    Parameters:
         - label: button label
         - callback: method called on button selection
         - btype: button type
@@ -53,22 +58,22 @@ class ButtonTypes:
         - web_url - web application
         """
 
-        def __init__(
-                self,
-                label: str,
-                callback: TypeCallback = None,
-                btype: ButtonTypes = ButtonTypes.NOTIFICATION,
-                args: Any = None,
-                notification: bool = True,
-                web_url: str = "",
-        ):
-            """Init class members"""
-            self.label = emoji_replace(label)
-            self.callback = callback
-            self.btype = btype
-            self.args = args
-            self.notification = notification
-            self.web_url = web_url
+    def __init__(
+            self,
+            label: str,
+            callback: TypeCallback = None,
+            btype: ButtonTypes = ButtonTypes.NOTIFICATION,
+            args: Any = None,
+            notification: bool = True,
+            web_url: str = "",
+    ) -> None:
+        """Init class members"""
+        self.label = emoji_replace(label)
+        self.callback = callback
+        self.btype = btype
+        self.args = args
+        self.notification = notification
+        self.web_url = web_url
 
 
 class AbstractMessage(ABC):
@@ -114,3 +119,46 @@ class AbstractMessage(ABC):
             else datetime.timedelta(minutes=self.EXPIRING_DELAY)
         )
         self._status = None
+
+    @abstractmethod
+    def update(self) -> str:
+        """
+        Update message content.
+
+        Returns:
+        - Message content formatted with HTML formatting/
+        """
+        raise NotImplementedError
+
+    def textInput(self, text: str) -> None:
+        """
+        Recieive text from console.
+
+        If used, this function must be instantiated in the child class.
+
+        Parameters:
+        - text: text received from console
+        """
+
+    def getButton(self, label: str) -> Optional[ButtonDef]:
+        """
+        Get button matching given label/
+
+        Parameters:
+        - label: matching label
+
+        Returns:
+        - button matching by label
+
+        Returns:
+        - EnvironmentError : too many buttons matching label
+        """
+        return next(iter(y for x in self.keyboard for y in x if y.label == label), None)
+
+    def addButtonBack(self, **kwargs: Any) -> None:
+        """Add a button to go back to previous menu."""
+        self.addButton(label="Back", callback=None, **kwargs)
+
+    def addButtonHome(self, **kwargs) -> None:
+        """Add a button to go back to main menu."""
+        self.addButton(label="Home", collback=None, **kwargs)
