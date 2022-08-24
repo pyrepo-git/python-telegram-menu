@@ -51,6 +51,7 @@ class ButtonTypes:
         - btype: button type
         - args: argument passed to the callback
         - notification: send notification to user
+        - web_url - web application
 
         """
 
