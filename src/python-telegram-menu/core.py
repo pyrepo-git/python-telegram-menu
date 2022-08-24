@@ -27,8 +27,8 @@ TypeCallback = Optional[Union[Callable[..., Any]]], "BaseMessage"
 TypeKeyboard = List[List["ButtonData"]]
 
 
-class ButtonAction:
-    """Button types"""
+class ButtonActions:
+    """Button actions"""
 
     HOME = auto(int)
     BACK = auto(int)
