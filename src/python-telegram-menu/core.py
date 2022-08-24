@@ -98,14 +98,14 @@ class AbstractMessage(ABC):
             input_field: str = "",
             **args: Any,
     ) -> None:
-        self.keyboard: TypeKeyboard = {{}}
+        self.keyboard: TypeKeyboard = [[]]
         self.label = emoji_replace(label)
         self.inlined = inlined
         self.notification = notification
         self.navigation = navigation
         self.input_field = input_field
         self.keyboard_previous: TypeKeyboard = [[]]
-        self.content_previouse: str = ""
+        self.content_previous: str = ""
         self.home_after = home_after
         self.message_id = -1
         self.expiry_period = (
