@@ -45,7 +45,7 @@ class ButtonTypes:
         """
         Base button class - wrapper for label with callback
 
-        Parameners:
+        Parameters:
         - label: button label
         - callback: method called on button selection
         - btype: button type
