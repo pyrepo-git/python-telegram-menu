@@ -27,16 +27,18 @@ TypeCallback = Optional[Union[Callable[..., Any]]], "BaseMessage"
 TypeKeyboard = List[List["ButtonData"]]
 
 
-class ButtonActions:
-    """Button actions"""
-
+class ButtonActions(Enum):
+    """
+    Button actions.
+    """
     HOME = auto(int)
     BACK = auto(int)
 
 
-class ButtonTypes:
-    """Button types"""
-
+class ButtonTypes(Enum):
+    """
+    Button types
+    """
     NOTIFICATION = auto(int)
     MESSAGE = auto(int)
     PICTURE = auto(int)
