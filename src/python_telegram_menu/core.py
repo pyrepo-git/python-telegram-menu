@@ -18,8 +18,8 @@ import validators
 from telegram import InlineKeyboardMarkUp, KeyboardButton
 from telegram import ReplyKeyboardMarkup, WepAppInfo
 
-# if TYPE_CHECKING:
-#   from python_telegram_menu import NavigationHandler
+if TYPE_CHECKING:
+    from python_telegram_menu import NavigationHandler
 
 logger = logging.getLogger(__name__)
 
@@ -244,19 +244,21 @@ class AbstractMessage(ABC):
 
             for btn in row:
                 if btn.web_url and validators.url(btn.web_url):
-                    button_array.append(button_object(
-                        text=btn.label,
-                        web_app=WepAppInfo(url=btn.web_url),
-                        callback_data=f"{self.label}.{btn.label}"
-                    )
+                    button_array.append(
+                        button_object(
+                            text=btn.label,
+                            web_app=WepAppInfo(url=btn.web_url),
+                            callback_data=f"{self.label}.{btn.label}"
+                        )
                     )
                 else:
-                    button_array.append(button_object(
-                        text=btn.label,
-                        callback_data=f"{self.label}.{btn.label}"
+                    button_array.append(
+                        button_object(
+                            text=btn.label,
+                            callback_data=f"{self.label}.{btn.label}"
+                        )
                     )
-                    )
-                keyboard_buttons.append(button_array)
+            keyboard_buttons.append(button_array)
 
             if inlined:
                 return InlineKeyboardMarkUp(inline_keyboard=keyboard_buttons.append(), resize_keyboard=False)
@@ -265,7 +267,7 @@ class AbstractMessage(ABC):
                 return ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True,
                                            input_field_placeholder=self.input_field)
 
-            return ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard == True)
+            return ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True)
 
     def is_alive(self) -> None:
         """
