@@ -1,7 +1,9 @@
 #!/usr/bin/env python 3
 # -*- coding: utf-8 -*-
 
-"""Data structures and abstract interface"""
+"""
+Data structures and abstract interface.
+"""
 
 import re
 import logging
@@ -15,15 +17,15 @@ from typing import TYPE_CHECKING, Any, Callable, List, Optional, Union
 import emoji
 import telegram
 import validators
-from telegram import InlineKeyboardMarkUp, KeyboardButton
-from telegram import ReplyKeyboardMarkup, WepAppInfo
+from telegram import InlineKeyboardMarkup, KeyboardButton
+from telegram import ReplyKeyboardMarkup, WebAppInfo
 
 if TYPE_CHECKING:
     from python_telegram_menu import NavigationHandler
 
 logger = logging.getLogger(__name__)
 
-TypeCallback = Optional[Union[Callable[..., Any], "BaseMessage"]]
+TypeCallback = Optional[Union[Callable[..., Any], "AbstractMessage"]]
 TypeKeyboard = List[List["ButtonData"]]
 
 
@@ -37,7 +39,7 @@ class ButtonActions(Enum):
 
 class ButtonTypes(Enum):
     """
-    Button types
+    Button types.
     """
     NOTIFICATION = auto(int)
     MESSAGE = auto(int)
@@ -49,7 +51,7 @@ class ButtonTypes(Enum):
 @dataclass
 class ButtonData:
     """
-    Base button class - wrapper for label with callback
+    Base button class - wrapper for label with callback.
 
     Parameters:
         - label: button label
@@ -78,9 +80,9 @@ class ButtonData:
         self.web_url = web_url
 
 
-def emoji_replace() -> str:
+def emoji_replace(label: str) -> str:
     """
-    Replace emojitoken with utf-16 code.
+    Replace emoji token with utf-16 code.
     """
     match_emoji = re.findall(r"(:\w+:)", label)
     for item in match_emoji:
@@ -91,7 +93,7 @@ def emoji_replace() -> str:
 
 class AbstractMessage(ABC):
     """
-    Abstract message class
+    Abstract message class.
 
     Parameters:
         - navigation: navigation manager
@@ -139,7 +141,7 @@ class AbstractMessage(ABC):
         Update message content.
 
         Returns:
-            - Message content formatted with HTML formatting/
+            - Message content formatted with HTML formatting
         """
         raise NotImplementedError
 
@@ -203,7 +205,7 @@ class AbstractMessage(ABC):
 
         Parameters:
             - label: button label
-            - callback: method calld on button selection
+            - callback: method called on button selection
             - button_type: button type
             - args: arguments passed for callback
             - notification: send/not send notification
@@ -227,7 +229,7 @@ class AbstractMessage(ABC):
     def gen_keyboard_content(
             self,
             inlined: Optional[bool] = None,
-    ) -> Union[ReplyKeyboardMarkup, InlineKeyboardMarkUp]:
+    ) -> Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]:
         """
         Generate keyboard content.
         """
@@ -247,7 +249,7 @@ class AbstractMessage(ABC):
                     button_array.append(
                         button_object(
                             text=btn.label,
-                            web_app=WepAppInfo(url=btn.web_url),
+                            web_app=WebAppInfo(url=btn.web_url),
                             callback_data=f"{self.label}.{btn.label}"
                         )
                     )
@@ -261,7 +263,7 @@ class AbstractMessage(ABC):
             keyboard_buttons.append(button_array)
 
             if inlined:
-                return InlineKeyboardMarkUp(inline_keyboard=keyboard_buttons.append(), resize_keyboard=False)
+                return InlineKeyboardMarkup(inline_keyboard=keyboard_buttons, resize_keyboard=False)
 
             if self.input_field and self.input_field != "<disable>":
                 return ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True,
