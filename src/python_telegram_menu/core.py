@@ -23,7 +23,7 @@ from telegram import ReplyKeyboardMarkup, WepAppInfo
 
 logger = logging.getLogger(__name__)
 
-TypeCallback = Optional[Union[Callable[..., Any]]], "BaseMessage"
+TypeCallback = Optional[Union[Callable[..., Any], "BaseMessage"]]
 TypeKeyboard = List[List["ButtonData"]]
 
 
@@ -47,7 +47,7 @@ class ButtonTypes(Enum):
 
 
 @dataclass
-class ButtonDef:
+class ButtonData:
     """
     Base button class - wrapper for label with callback
 
@@ -142,7 +142,7 @@ class AbstractMessage(ABC):
         - text: text received from console
         """
 
-    def get_button(self, label: str) -> Optional[ButtonDef]:
+    def get_button(self, label: str) -> Optional[ButtonData]:
         """
         Get button matching given label/
 
