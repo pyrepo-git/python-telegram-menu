@@ -21,7 +21,7 @@ from telegram import ReplyKeyboardMarkup, WepAppInfo
 # if TYPE_CHECKING:
 #   from python_telegram_menu import NavigationHandler
 
-logger = logging.initLogger(__name__)
+logger = logging.getLogger(__name__)
 
 TypeCallback = Optional[Union[Callable[..., Any]]], "BaseMessage"
 TypeKeyboard = List[List["ButtonData"]]
@@ -132,7 +132,7 @@ class AbstractMessage(ABC):
 
     def text_input(self, text: str) -> None:
         """
-        Recieive text from console.
+        Receive text from console.
 
         If used, this function must be instantiated in the child class.
 
@@ -155,14 +155,10 @@ class AbstractMessage(ABC):
         """
         return next(iter(y for x in self.keyboard for y in x if y.label == label), None)
 
-
     def add_button_back(self, **kwargs: Any) -> None:
         """Add a button to go back to previous menu."""
         self.add_button(label="Back", callback=None, **kwargs)
 
-
     def add_button_home(self, **kwargs) -> None:
         """Add a button to go back to main menu."""
         self.add_button(label="Home", collback=None, **kwargs)
-
-

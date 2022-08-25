@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = src/python-telegram-menu
+source = src/python_telegram_menu
 
 [report]
 exclude_lines =
