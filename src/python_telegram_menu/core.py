@@ -286,6 +286,6 @@ class AbstractMessage(ABC):
 
     def kill_message(self) -> None:
         """
-        Display status before message is dedtroyed.
+        Display status before message is destroyed.
         """
         logger.debug(f"Remove message '{self.label}'({self.message_id})")
