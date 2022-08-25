@@ -2,5 +2,5 @@ dataclasses~=0.6
 emoji>=1.6.1
 python-telegram-bot>=13.13
 validators~=0.20.0
-
 setuptools~=63.2.0
+click~=8.1.3

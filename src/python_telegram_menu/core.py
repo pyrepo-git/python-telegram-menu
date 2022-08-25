@@ -86,7 +86,7 @@ def emoji_replace(label: str) -> str:
     """
     match_emoji = re.findall(r"(:\w+:)", label)
     for item in match_emoji:
-        emoji_str = emoji.emojize(item, use_aliases=True)
+        emoji_str = emoji.emojize(item, language='alias')
         label = label.replace(item, emoji_str)
     return label
 
@@ -116,7 +116,7 @@ class AbstractMessage(ABC):
             inlined: bool = False,
             notification: bool = True,
             input_field: str = "",
-            **args: Any,
+            # **args: Optional[Any],
     ) -> None:
         self.keyboard: TypeKeyboard = [[]]
         self.label = emoji_replace(label)
@@ -238,7 +238,7 @@ class AbstractMessage(ABC):
         keyboard_buttons = []
         button_object = telegram.InlineKeyboardButton if inlined else KeyboardButton
 
-        for row in self.keyboard
+        for row in self.keyboard:
             if not self.input_field and row:
                 self.input_field = row[0].label
 
