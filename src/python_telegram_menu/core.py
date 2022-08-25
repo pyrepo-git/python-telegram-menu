@@ -156,9 +156,20 @@ class AbstractMessage(ABC):
         return next(iter(y for x in self.keyboard for y in x if y.label == label), None)
 
     def add_button_back(self, **kwargs: Any) -> None:
-        """Add a button to go back to previous menu."""
+        """
+        Add a button to go back to previous menu.
+
+        Parameters:
+        - label: button label
+        - callback: method called on button selection
+        """
         self.add_button(label="Back", callback=None, **kwargs)
 
     def add_button_home(self, **kwargs) -> None:
-        """Add a button to go back to main menu."""
+        """
+        Add a button to go back to main menu.
+
+        - label: button label
+        - callback: method called on button selection
+        """
         self.add_button(label="Home", collback=None, **kwargs)
