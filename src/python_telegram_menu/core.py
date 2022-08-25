@@ -64,7 +64,7 @@ class ButtonData:
             self,
             label: str,
             callback: TypeCallback = None,
-            btype: ButtonTypes = ButtonTypes.NOTIFICATION,
+            button_type: ButtonTypes = ButtonTypes.NOTIFICATION,
             args: Any = None,
             notification: bool = True,
             web_url: str = "",
@@ -72,10 +72,21 @@ class ButtonData:
         """Init class members"""
         self.label = emoji_replace(label)
         self.callback = callback
-        self.btype = btype
+        self.button_type = button_type
         self.args = args
         self.notification = notification
         self.web_url = web_url
+
+
+def emoji_replace() -> str:
+    """
+    Replace emojitoken with utf-16 code.
+    """
+    match_emoji = re.findall(r"(:\w+:)", label)
+    for item in match_emoji:
+        emoji_str = emoji.emojize(item, use_aliases=True)
+        label = label.replace(item, emoji_str)
+    return label
 
 
 class AbstractMessage(ABC):
@@ -83,12 +94,12 @@ class AbstractMessage(ABC):
     Abstract message class
 
     Parameters:
-    - navigation: navigation manager
-    - label: message label
-    - expiry_period: duration before message is deleted
-    - inlined: create an inlined message instead of a menu message
-    - home_after: go back to home menu after executing the action
-    - notification: show a notification in Telegram interface
+        - navigation: navigation manager
+        - label: message label
+        - expiry_period: duration before message is deleted
+        - inlined: create an inlined message instead of a menu message
+        - home_after: go back to home menu after executing the action
+        - notification: show a notification in Telegram interface
     """
 
     EXPIRING_DELAY = 12
@@ -128,7 +139,7 @@ class AbstractMessage(ABC):
         Update message content.
 
         Returns:
-        - Message content formatted with HTML formatting/
+            - Message content formatted with HTML formatting/
         """
         raise NotImplementedError
 
@@ -139,7 +150,7 @@ class AbstractMessage(ABC):
         If used, this function must be instantiated in the child class.
 
         Parameters:
-        - text: text received from console
+            - text: text received from console
         """
 
     def get_button(self, label: str) -> Optional[ButtonData]:
@@ -147,13 +158,13 @@ class AbstractMessage(ABC):
         Get button matching given label/
 
         Parameters:
-        - label: matching label
+            - label: matching label
 
         Returns:
-        - button matching by label
+            - button matching by label
 
-        Returns:
-        - EnvironmentError : too many buttons matching label
+        Raises:
+            - EnvironmentError : too many buttons matching label
         """
         return next(iter(y for x in self.keyboard for y in x if y.label == label), None)
 
@@ -162,8 +173,8 @@ class AbstractMessage(ABC):
         Add a button to go back to previous menu.
 
         Parameters:
-        - label: button label
-        - callback: method called on button selection
+            - label: button label
+            - callback: method called on button selection
         """
         self.add_button(label="Back", callback=None, **kwargs)
 
@@ -171,7 +182,108 @@ class AbstractMessage(ABC):
         """
         Add a button to go back to main menu.
 
-        - label: button label
-        - callback: method called on button selection
+        Parameters:
+            - label: button label
+            - callback: method called on button selection
         """
-        self.add_button(label="Home", collback=None, **kwargs)
+        self.add_button(label="Home", callback=None, **kwargs)
+
+    def add_button(
+            self,
+            label: str,
+            callback: TypeCallback = None,
+            button_type: ButtonTypes = ButtonTypes.NOTIFICATION,
+            args: Any = None,
+            notification: bool = False,
+            new_row: bool = False,
+            web_url: str = "",
+    ) -> None:
+        """
+        Add button to keyboard container.
+
+        Parameters:
+            - label: button label
+            - callback: method calld on button selection
+            - button_type: button type
+            - args: arguments passed for callback
+            - notification: send/not send notification
+            - new_row: add/not add new row in keyboard container
+            - web_url: web url
+        """
+        buttons_per_row = 2 if not self.inlined else 4
+        if not isinstance(self.keyboard, list) or not self.keyboard:
+            self.keyboard = [[]]
+        if new_row or len(self.keyboard[-1]) == buttons_per_row:
+            self.keyboard.append([ButtonData(label, callback, button_type, args, notification, web_url)])
+        else:
+            self.keyboard[-1].append(ButtonData(label, callback, button_type, args, notification, web_url))
+
+    def edit_message(self) -> bool:
+        """
+        Requested navigation controller to update current message.
+        """
+        return self.notification.edit_message(self)
+
+    def gen_keyboard_content(
+            self,
+            inlined: Optional[bool] = None,
+    ) -> Union[ReplyKeyboardMarkup, InlineKeyboardMarkUp]:
+        """
+        Generate keyboard content.
+        """
+        if inlined is None:
+            inlined = self.inlined
+        keyboard_buttons = []
+        button_object = telegram.InlineKeyboardButton if inlined else KeyboardButton
+
+        for row in self.keyboard
+            if not self.input_field and row:
+                self.input_field = row[0].label
+
+            button_array = []
+
+            for btn in row:
+                if btn.web_url and validators.url(btn.web_url):
+                    button_array.append(button_object(
+                        text=btn.label,
+                        web_app=WepAppInfo(url=btn.web_url),
+                        callback_data=f"{self.label}.{btn.label}"
+                    )
+                    )
+                else:
+                    button_array.append(button_object(
+                        text=btn.label,
+                        callback_data=f"{self.label}.{btn.label}"
+                    )
+                    )
+                keyboard_buttons.append(button_array)
+
+            if inlined:
+                return InlineKeyboardMarkUp(inline_keyboard=keyboard_buttons.append(), resize_keyboard=False)
+
+            if self.input_field and self.input_field != "<disable>":
+                return ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True,
+                                           input_field_placeholder=self.input_field)
+
+            return ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard == True)
+
+    def is_alive(self) -> None:
+        """
+        Update message timestamp.
+        """
+        self.time_alive = datetime.datetime.now()
+
+    def is_expired(self) -> bool:
+        """
+        Return:
+            - True: if expiry date of message has expired
+        """
+        if self.time_alive is not None:
+            return self.time_alive + self.expiry_period < datetime.datetime.now()
+        return False
+
+    def kill_message(self) -> None:
+        """
+        Display status before message is dedtroyed.
+        """
+        logger.debug(f"Remove message '{self.label}'({self.message_id})")
