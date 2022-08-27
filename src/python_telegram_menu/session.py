@@ -99,7 +99,7 @@ class Session:
             navigation_handler_class: Optional[Type["NavigationHandler"]] = None
     ) -> None:
         """
-        Run scheduler and dispatcher.
+        Activate scheduler and dispatcher.
 
         Parameters:
             - start_message_class: class used to create start message
