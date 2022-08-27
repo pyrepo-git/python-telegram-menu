@@ -21,7 +21,7 @@ from telegram import InlineKeyboardMarkup, KeyboardButton
 from telegram import ReplyKeyboardMarkup, WebAppInfo
 
 if TYPE_CHECKING:
-    from .navigation import NavigationHandler
+    from .handler import NavigationHandler
 
 logger = logging.getLogger(__name__)
 

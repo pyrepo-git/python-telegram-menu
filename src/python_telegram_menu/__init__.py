@@ -6,7 +6,7 @@
 
 from ._version import __version__
 from .core import ButtonActions, ButtonTypes, Button, AbstractMessage
-from .navigation import NavigationHandler
+from .handler import NavigationHandler
 from session import Session
 
 __all__ = [

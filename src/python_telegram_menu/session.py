@@ -29,7 +29,7 @@ from telegram.utils.request import Request
 from ._version import __raw_url__
 from .core import TypeCallback, emoji_replace
 from .core import AbstractMessage, Button, ButtonTypes
-from .navigation import NavigationHandler
+from .handler import NavigationHandler
 
 logger = logging.getLogger(__name__)
 
