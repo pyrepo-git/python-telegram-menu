@@ -21,7 +21,7 @@ from telegram import InlineKeyboardMarkup, KeyboardButton
 from telegram import ReplyKeyboardMarkup, WebAppInfo
 
 if TYPE_CHECKING:
-    from python_telegram_menu import NavigationHandler
+    from .navigation import NavigationHandler
 
 logger = logging.getLogger(__name__)
 
@@ -29,27 +29,29 @@ TypeCallback = Optional[Union[Callable[..., Any], "AbstractMessage"]]
 TypeKeyboard = List[List["ButtonData"]]
 
 
+# noinspection PyArgumentList
 class ButtonActions(Enum):
     """
     Button actions.
     """
-    HOME = auto(int)
-    BACK = auto(int)
+    HOME = auto()
+    BACK = auto()
 
 
+# noinspection PyArgumentList
 class ButtonTypes(Enum):
     """
     Button types.
     """
-    NOTIFICATION = auto(int)
-    MESSAGE = auto(int)
-    PICTURE = auto(int)
-    STICKER = auto(int)
-    POLL = auto(int)
+    NOTIFICATION = auto()
+    MESSAGE = auto()
+    PICTURE = auto()
+    STICKER = auto()
+    POLL = auto()
 
 
 @dataclass
-class ButtonData:
+class Button:
     """
     Base button class - wrapper for label with callback.
 
@@ -116,7 +118,7 @@ class AbstractMessage(ABC):
             inlined: bool = False,
             notification: bool = True,
             input_field: str = "",
-            # **args: Optional[Any],
+            **args: Optional[Any],
     ) -> None:
         self.keyboard: TypeKeyboard = [[]]
         self.label = emoji_replace(label)
@@ -155,7 +157,7 @@ class AbstractMessage(ABC):
             - text: text received from console
         """
 
-    def get_button(self, label: str) -> Optional[ButtonData]:
+    def get_button(self, label: str) -> Optional[Button]:
         """
         Get button matching given label/
 
@@ -216,9 +218,9 @@ class AbstractMessage(ABC):
         if not isinstance(self.keyboard, list) or not self.keyboard:
             self.keyboard = [[]]
         if new_row or len(self.keyboard[-1]) == buttons_per_row:
-            self.keyboard.append([ButtonData(label, callback, button_type, args, notification, web_url)])
+            self.keyboard.append([Button(label, callback, button_type, args, notification, web_url)])
         else:
-            self.keyboard[-1].append(ButtonData(label, callback, button_type, args, notification, web_url))
+            self.keyboard[-1].append(Button(label, callback, button_type, args, notification, web_url))
 
     def edit_message(self) -> bool:
         """
