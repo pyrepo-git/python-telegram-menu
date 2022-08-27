@@ -71,7 +71,7 @@ class Button:
             button_type: ButtonTypes = ButtonTypes.NOTIFICATION,
             args: Any = None,
             notification: bool = True,
-            web_url: str = "",
+            web_url: str = ""
     ) -> None:
         """Init class members"""
         self.label = emoji_replace(label)
@@ -107,7 +107,7 @@ class AbstractMessage(ABC):
     """
 
     EXPIRING_DELAY = 12
-    time_alive: datetime.datetime
+    date_time: datetime.datetime
 
     def __init__(
             self,
@@ -118,7 +118,7 @@ class AbstractMessage(ABC):
             inlined: bool = False,
             notification: bool = True,
             input_field: str = "",
-            **args: Optional[Any],
+            **args: Optional[Any]
     ) -> None:
         self.keyboard: TypeKeyboard = [[]]
         self.label = emoji_replace(label)
@@ -172,7 +172,10 @@ class AbstractMessage(ABC):
         """
         return next(iter(y for x in self.keyboard for y in x if y.label == label), None)
 
-    def add_button_back(self, **kwargs: Any) -> None:
+    def add_button_back(
+            self,
+            **kwargs: Any
+    ) -> None:
         """
         Add a button to go back to previous menu.
 
@@ -182,7 +185,10 @@ class AbstractMessage(ABC):
         """
         self.add_button(label="Back", callback=None, **kwargs)
 
-    def add_button_home(self, **kwargs) -> None:
+    def add_button_home(
+            self,
+            **kwargs
+    ) -> None:
         """
         Add a button to go back to main menu.
 
@@ -200,7 +206,7 @@ class AbstractMessage(ABC):
             args: Any = None,
             notification: bool = False,
             new_row: bool = False,
-            web_url: str = "",
+            web_url: str = ""
     ) -> None:
         """
         Add button to keyboard container.
@@ -230,7 +236,7 @@ class AbstractMessage(ABC):
 
     def gen_keyboard_content(
             self,
-            inlined: Optional[bool] = None,
+            inlined: Optional[bool] = None
     ) -> Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]:
         """
         Generate keyboard content.
@@ -273,19 +279,19 @@ class AbstractMessage(ABC):
 
             return ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True)
 
-    def is_alive(self) -> None:
+    def init_date_time(self) -> None:
         """
-        Update message timestamp.
+        Set message initial date time.
         """
-        self.time_alive = datetime.datetime.now()
+        self.date_time = datetime.datetime.now()
 
     def is_expired(self) -> bool:
         """
         Return:
-            - True: if expiry date of message has expired
+            - True: if message date time is expired
         """
-        if self.time_alive is not None:
-            return self.time_alive + self.expiry_period < datetime.datetime.now()
+        if self.date_time is not None:
+            return self.date_time + self.expiry_period < datetime.datetime.now()
         return False
 
     def kill_message(self) -> None:
