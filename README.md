@@ -1,4 +1,4 @@
 # python_telegram_menu
 
-Python package for creating navigation menus based on Telegram Bot API. 
+Python package for Telegram menus, based on Telegram Bot API. 
 
