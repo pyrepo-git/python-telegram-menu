@@ -46,7 +46,7 @@ class Button:
     """
     Base button class - wrapper for label with callback.
 
-    Parameters:
+    Class members:
         - label: button label
         - callback: method called on button selection
         - btype: button type
@@ -64,7 +64,9 @@ class Button:
             notification: bool = True,
             web_url: str = ""
     ) -> None:
-        """Init class members"""
+        """
+        Button object constructor.
+        """
         self.label = emoji_replace(label)
         self.callback = callback
         self.button_type = button_type
@@ -88,7 +90,7 @@ class ABCMessage(ABC):
     """
     Abstract message class.
 
-    Parameters:
+    Class members:
         - navigation: navigation manager
         - label: message label
         - expiry_period: duration before message is deleted
@@ -111,6 +113,9 @@ class ABCMessage(ABC):
             input_field: str = "",
             **args: Optional[Any]
     ) -> None:
+        """
+        ABCMessage object constructor.
+        """
         self.keyboard: TypeKeyboard = [[]]
         self.label = emoji_replace(label)
         self.inlined = inlined

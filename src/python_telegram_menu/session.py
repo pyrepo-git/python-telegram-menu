@@ -38,6 +38,9 @@ class Session:
     """
     Telegram session.
     Send start message to each new user connecting to the bot.
+
+    Class members:
+        - updater:
     """
     TIMEOUT_READ = 5
     TIMEOUT_CONNECT = TIMEOUT_READ
@@ -56,7 +59,7 @@ class Session:
             - init_message: init session message
         """
         if not isinstance(tg_key, str):
-            raise KeyError("Telegram API Key must be a string")
+            raise KeyError("Telegram API Key must be a string.")
 
         self.updater = telegram.ext.Updater(
             tg_key,
@@ -72,7 +75,7 @@ class Session:
         try:
             logger.info(f"Connected to Telegram bot {bot.name}({bot.first_name})")
         except Unauthorized as error:
-            raise AttributeError(f"Bot matching by key {tg_key} not found") from error
+            raise AttributeError(f"Bot matching by key {tg_key} not found.") from error
 
         self._tg_key = tg_key
         self.sessions: List[NavigationHandler] = []
@@ -172,7 +175,7 @@ class Session:
         Callback for webapp results
         """
         if update.effective_chat is None or update.effective_message is None:
-            raise AttributeError("Error! Chat or Message object nut found")
+            raise AttributeError("Error! Chat or Message object nut found.")
 
         session = self.get_session(update.effective_chat.id)
 
@@ -194,7 +197,7 @@ class Session:
         Select callback for menu item
         """
         if update.effective_chat is None:
-            raise AttributeError("Error! Chat object nut found")
+            raise AttributeError("Error! Chat object nut found.")
 
         session = self.get_session(update.effective_chat.id)
 
@@ -213,7 +216,7 @@ class Session:
         Used for poll session.
         """
         if update.effective_user is None:
-            raise AttributeError("Error! user object not found")
+            raise AttributeError("Error! user object not found.")
 
         session = next((x for x in self.sessions if x.user_name == update.effective_user.first_name), None)
 
@@ -229,7 +232,7 @@ class Session:
         Select inline callback.
         """
         if update.effective_chat is None:
-            raise AttributeError("Error! Chat object nut found")
+            raise AttributeError("Error! Chat object nut found.")
 
         session = self.get_session(update.effective_chat.id)
 
