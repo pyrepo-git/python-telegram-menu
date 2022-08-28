@@ -28,7 +28,7 @@ from telegram.utils.request import Request
 
 from ._version import __raw_url__
 from .core import TypeCallback, emoji_replace
-from .core import AbstractMessage, Button, ButtonTypes
+from .core import ABCMessage, Button, ButtonTypes
 
 logger = logging.getLogger(__name__)
 

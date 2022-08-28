@@ -5,7 +5,7 @@
  """
 
 from ._version import __version__
-from .core import ButtonActions, ButtonTypes, Button, AbstractMessage
+from .core import ButtonActions, ButtonTypes, Button, ABCMessage
 from .handler import NavigationHandler
 from session import Session
 
@@ -16,5 +16,5 @@ __all__ = [
     "ButtonActions",
     "ButtonTypes",
     "Button",
-    "AbstractMessage",
+    "ABCMessage",
 ]

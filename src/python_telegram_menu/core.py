@@ -25,17 +25,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-TypeCallback = Optional[Union[Callable[..., Any], "AbstractMessage"]]
-TypeKeyboard = List[List["ButtonData"]]
-
-
-# noinspection PyArgumentList
-class ButtonActions(Enum):
-    """
-    Button actions.
-    """
-    HOME = auto()
-    BACK = auto()
+TypeCallback = Optional[Union[Callable[..., Any], "ABCMessage"]]
+TypeKeyboard = List[List["Button"]]
 
 
 # noinspection PyArgumentList
@@ -93,7 +84,7 @@ def emoji_replace(label: str) -> str:
     return label
 
 
-class AbstractMessage(ABC):
+class ABCMessage(ABC):
     """
     Abstract message class.
 

@@ -28,7 +28,7 @@ from telegram.utils.request import Request
 
 from ._version import __raw_url__
 from .core import TypeCallback, emoji_replace
-from .core import AbstractMessage, Button, ButtonTypes
+from .core import ABCMessage, Button, ButtonTypes
 from .handler import NavigationHandler
 
 logger = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ class Session:
 
         self._tg_key = tg_key
         self.sessions: List[NavigationHandler] = []
-        self.start_message_class: Optional[Type[AbstractMessage]] = None
+        self.start_message_class: Optional[Type[ABCMessage]] = None
         self.start_message_args: Optional[List[Any]] = None
         self.navigation_handler_class: Optional[Type["NavigationHandler"]] = None
 
@@ -92,7 +92,7 @@ class Session:
 
     def start(
             self,
-            start_message_class: Type[AbstractMessage],
+            start_message_class: Type[ABCMessage],
             start_message_args: Optional[List[Any]] = None,
             polling: bool = True,
             idle: bool = False,
@@ -112,8 +112,8 @@ class Session:
         self.start_message_args = start_message_args
         self.navigation_handler_class = navigation_handler_class
 
-        if not issubclass(start_message_class, AbstractMessage):
-            raise AttributeError("start_message_class must be AbstractMessage!")
+        if not issubclass(start_message_class, ABCMessage):
+            raise AttributeError("start_message_class must be ABCMessage!")
         if start_message_args is not None and not isinstance(start_message_args, list):
             raise AttributeError("start_message_args is not a lis!")
         if not issubclass(self.navigation_handler_class, NavigationHandler):
@@ -154,12 +154,90 @@ class Session:
 
         session.goto_menu(start_message)
 
-
     def get_session(
             self,
             chat_id: int = 0
     ) -> Optional["NavigationHandler"]:
         sessions = [x for x in self.sessions if chat_id in (x.chart_id, 0)]
         if not sessions:
-            return  None
+            return None
         return sessions[0]
+
+    def _web_app_callback(
+            self,
+            update: Update,
+            context: Any
+    ) -> None:
+        """
+        Callback for webapp results
+        """
+        if update.effective_chat is None or update.effective_message is None:
+            raise AttributeError("Error! Chat or Message object nut found")
+
+        session = self.get_session(update.effective_chat.id)
+
+        if session is None:
+            self._send_start_message(update, context)
+            return
+
+        session.app_message_webapp_callback(
+            update.effective_message.web_app_data.data,
+            update.effective_message.web_app_data.button_text
+        )
+
+    def _button_select_callback(
+            self,
+            update: Update,
+            context: CallbackContext
+    ) -> None:
+        """
+        Select callback for menu item
+        """
+        if update.effective_chat is None:
+            raise AttributeError("Error! Chat object nut found")
+
+        session = self.get_session(update.effective_chat.id)
+
+        if session is None:
+            self._send_start_message(update, context)
+            return
+
+        session.select_menu_button(update.message.text)
+
+    def _poll_answer(
+            self,
+            update: Update,
+            _: CallbackContext
+    ) -> None:
+        """
+        Used for poll session.
+        """
+        if update.effective_user is None:
+            raise AttributeError("Error! user object not found")
+
+        session = next((x for x in self.sessions if x.user_name == update.effective_user.first_name), None)
+
+        if session:
+            session.poll_aswer(update.poll_answer.option_ids[0])
+
+    def _button_inline_select_callback(
+            self,
+            update: Update,
+            context: CallbackContext
+    ) -> None:
+        """
+        Select inline callback.
+        """
+        if update.effective_chat is None:
+            raise AttributeError("Error! Chat object nut found")
+
+        session = self.get_session(update.effective_chat.id)
+
+        if session is None:
+            self._send_start_message(update, context)
+            return
+
+        session.app_message_button_callback(
+            update.callback_query.data,
+            update.callback_query.id
+        )
