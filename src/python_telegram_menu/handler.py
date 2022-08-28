@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Activate telegram bot session.
+Handler for telegram bot session.
 """
 
 import datetime
