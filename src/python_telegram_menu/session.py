@@ -92,7 +92,7 @@ class Session:
 
         # add command handlers
         dispatcher.add_handler(
-            CommandHandler(init_string, self._send_start_message_))
+            CommandHandler(init_string, self._on_start_message_))
 
         dispatcher.add_handler(
             MessageHandler(telegram.ext.Filters.text,
@@ -103,7 +103,7 @@ class Session:
                            self._on_web_callback))
 
         dispatcher.add_handler((
-            CallbackQueryHandler(self._button_inline_select_callback)))
+            CallbackQueryHandler(self._on_inline_callback)))
 
         dispatcher.add_handler(
             telegram.ext.PollAnswerHandler(self._poll_answer))
@@ -246,7 +246,7 @@ class Session:
         if session:
             session.poll_aswer(update.poll_answer.option_ids[0])
 
-    def _button_inline_select_callback(
+    def _on_inline_callback(
             self,
             update: Update,
             context: CallbackContext
