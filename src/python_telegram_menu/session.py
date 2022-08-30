@@ -41,6 +41,11 @@ class Session:
 
     Class members:
         - updater:
+        - _tg_key: bot telegram key
+        - sessions: connection sessions container
+        - initial_message_class: initial connection class
+        - initial_message_args: initial connection class args
+        - handler_class: request processing class
     """
     TIMEOUT_READ = 5
     TIMEOUT_CONNECT = TIMEOUT_READ
@@ -81,8 +86,8 @@ class Session:
 
         self._tg_key = tg_key
         self.sessions: List[Handler] = []
-        self.start_message_class: Optional[Type[ABCMessage]] = None
-        self.start_message_args: Optional[List[Any]] = None
+        self.init_message_class: Optional[Type[ABCMessage]] = None
+        self.init_message_args: Optional[List[Any]] = None
         self.handler_class: Optional[Type["Handler"]] = None
 
         # add command handlers
@@ -107,8 +112,8 @@ class Session:
 
     def start(
             self,
-            start_message_class: Type[ABCMessage],
-            start_message_args: Optional[List[Any]] = None,
+            init_message_class: Type[ABCMessage],
+            init_message_args: Optional[List[Any]] = None,
             polling: bool = True,
             idle: bool = False,
             handler_class: Optional[Type["Handler"]] = None
@@ -117,22 +122,22 @@ class Session:
         Activate scheduler and dispatcher.
 
         Parameters:
-            - start_message_class: class used to create start message
-            - start_message_args: optional arguments passed to start class
+            - init_message_class: class used to create start message
+            - init_message_args: optional arguments passed to start class
             - polling: if True - start polling updates from telegram
             - idle: if True - blocks until one of the signals are received and
               stops the updater
             - handler_class: optional class extended base handler class
         """
-        self.start_message_class = start_message_class
-        self.start_message_args = start_message_args
+        self.init_message_class = init_message_class
+        self.init_message_args = init_message_args
         self.handler_class = handler_class
 
-        if not issubclass(start_message_class, ABCMessage):
-            raise AttributeError("start_message_class must be ABCMessage!")
-        if start_message_args is not None and \
-                not isinstance(start_message_args, list):
-            raise AttributeError("start_message_args is not a lis!")
+        if not issubclass(init_message_class, ABCMessage):
+            raise AttributeError("init_message_class must be ABCMessage!")
+        if init_message_args is not None and \
+                not isinstance(init_message_args, list):
+            raise AttributeError("init_message_args is not a lis!")
         if not issubclass(self.handler_class, Handler):
             raise AttributeError("handler_class must be a Handler!")
 
@@ -162,14 +167,14 @@ class Session:
             self._tg_key, chat, self.scheduler)
         self.sessions.append(session)
 
-        if self.start_message_class is None:
+        if self.init_message_class is None:
             raise AttributeError("Error! Message class not defined.")
-        if self.start_message_args is not None:
-            start_message = self.start_message_class(
+        if self.init_message_args is not None:
+            start_message = self.init_message_class(
                 session,
-                message_args=self.start_message_args)
+                message_args=self.init_message_args)
         else:
-            start_message = self.start_message_class(session)
+            start_message = self.init_message_class(session)
 
         session.goto_menu(start_message)
 
