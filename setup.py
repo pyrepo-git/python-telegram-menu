@@ -10,6 +10,7 @@ extras_require = {
         "pyflakes",
         "pre-commit",
         "black",
+        "flake8",
         "twine",
     ],
 }
