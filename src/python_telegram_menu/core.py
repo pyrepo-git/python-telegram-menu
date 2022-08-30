@@ -21,7 +21,7 @@ from telegram import InlineKeyboardMarkup, KeyboardButton
 from telegram import ReplyKeyboardMarkup, WebAppInfo
 
 if TYPE_CHECKING:
-    from .handler import NavigationHandler
+    from .handler import Handler
 
 logger = logging.getLogger(__name__)
 
@@ -91,7 +91,7 @@ class ABCMessage(ABC):
     Abstract message class.
 
     Class members:
-        - navigation: navigation manager
+        - handler: handler class
         - label: message label
         - expiry_period: duration before message is deleted
         - inlined: create an inlined message instead of a menu message
@@ -104,14 +104,14 @@ class ABCMessage(ABC):
 
     def __init__(
             self,
-            navigation: "NavigationHandler",
+            handler: "Handler",
             label: str = "",
             expiry_period: Optional[datetime.timedelta] = None,
             home_after: bool = False,
             inlined: bool = False,
             notification: bool = True,
             input_field: str = "",
-            **args: Optional[Any]
+            # **args: Optional[Any]
     ) -> None:
         """
         ABCMessage object constructor.
@@ -120,7 +120,7 @@ class ABCMessage(ABC):
         self.label = emoji_replace(label)
         self.inlined = inlined
         self.notification = notification
-        self.navigation = navigation
+        self.handler = handler
         self.input_field = input_field
         self.keyboard_previous: TypeKeyboard = [[]]
         self.content_previous: str = ""
@@ -166,7 +166,8 @@ class ABCMessage(ABC):
         Raises:
             - EnvironmentError : too many buttons matching label
         """
-        return next(iter(y for x in self.keyboard for y in x if y.label == label), None)
+        return next(iter(y for x in self.keyboard
+                         for y in x if y.label == label), None)
 
     def add_button_back(
             self,
@@ -200,8 +201,8 @@ class ABCMessage(ABC):
             callback: TypeCallback = None,
             button_type: ButtonTypes = ButtonTypes.NOTIFICATION,
             args: Any = None,
-            notification: bool = False,
-            new_row: bool = False,
+            send_notification: bool = False,
+            add_row: bool = False,
             web_url: str = ""
     ) -> None:
         """
@@ -212,21 +213,23 @@ class ABCMessage(ABC):
             - callback: method called on button selection
             - button_type: button type
             - args: arguments passed for callback
-            - notification: send/not send notification
-            - new_row: add/not add new row in keyboard container
+            - send_notification: send/not notification
+            - add_row: add/not add new row in keyboard container
             - web_url: web url
         """
         buttons_per_row = 2 if not self.inlined else 4
         if not isinstance(self.keyboard, list) or not self.keyboard:
             self.keyboard = [[]]
-        if new_row or len(self.keyboard[-1]) == buttons_per_row:
-            self.keyboard.append([Button(label, callback, button_type, args, notification, web_url)])
+        if add_row or len(self.keyboard[-1]) == buttons_per_row:
+            self.keyboard.append([Button(label, callback, button_type,
+                                         args, send_notification, web_url)])
         else:
-            self.keyboard[-1].append(Button(label, callback, button_type, args, notification, web_url))
+            self.keyboard[-1].append(Button(label, callback, button_type,
+                                            args, send_notification, web_url))
 
     def edit_message(self) -> bool:
         """
-        Requested navigation controller to update current message.
+        Requested handler controller to update current message.
         """
         return self.notification.edit_message(self)
 
@@ -240,7 +243,8 @@ class ABCMessage(ABC):
         if inlined is None:
             inlined = self.inlined
         keyboard_buttons = []
-        button_object = telegram.InlineKeyboardButton if inlined else KeyboardButton
+        button_object = telegram.InlineKeyboardButton \
+            if inlined else KeyboardButton
 
         for row in self.keyboard:
             if not self.input_field and row:
@@ -267,13 +271,17 @@ class ABCMessage(ABC):
             keyboard_buttons.append(button_array)
 
             if inlined:
-                return InlineKeyboardMarkup(inline_keyboard=keyboard_buttons, resize_keyboard=False)
+                return InlineKeyboardMarkup(inline_keyboard=keyboard_buttons,
+                                            resize_keyboard=False)
 
             if self.input_field and self.input_field != "<disable>":
-                return ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True,
-                                           input_field_placeholder=self.input_field)
+                return ReplyKeyboardMarkup(
+                    keyboard=keyboard_buttons,
+                    resize_keyboard=True,
+                    input_field_placeholder=self.input_field)
 
-            return ReplyKeyboardMarkup(keyboard=keyboard_buttons, resize_keyboard=True)
+            return ReplyKeyboardMarkup(keyboard=keyboard_buttons,
+                                       resize_keyboard=True)
 
     def init_date_time(self) -> None:
         """
@@ -287,7 +295,8 @@ class ABCMessage(ABC):
             - True: if message date time is expired
         """
         if self.date_time is not None:
-            return self.date_time + self.expiry_period < datetime.datetime.now()
+            return self.date_time + self.expiry_period \
+                   < datetime.datetime.now()
         return False
 
     def kill_message(self) -> None:

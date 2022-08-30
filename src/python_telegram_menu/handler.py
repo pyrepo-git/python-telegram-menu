@@ -33,6 +33,6 @@ from .core import ABCMessage, Button, ButtonTypes
 logger = logging.getLogger(__name__)
 
 
-class NavigationHandler:
+class Handler:
     def __init__(self):
         pass

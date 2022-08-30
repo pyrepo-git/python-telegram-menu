@@ -5,15 +5,14 @@
  """
 
 from ._version import __version__
-from .core import ButtonActions, ButtonTypes, Button, ABCMessage
-from .handler import NavigationHandler
-from session import Session
+from .core import ButtonTypes, Button, ABCMessage
+from .handler import Handler
+from .session import Session
 
 __all__ = [
     "__version__",
-    "NavigationHandler",
+    "Handler",
     "Session",
-    "ButtonActions",
     "ButtonTypes",
     "Button",
     "ABCMessage",
