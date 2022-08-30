@@ -250,7 +250,7 @@ class Session:
         Select inline callback.
         """
         if update.effective_chat is None:
-            raise AttributeError("Error! Chat object nut found.")
+            raise AttributeError("Error! Chat object not found.")
 
         session = self.get_session(update.effective_chat.id)
 
