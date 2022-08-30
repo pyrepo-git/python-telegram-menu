@@ -43,25 +43,25 @@ class Session:
         - updater:
         - _tg_key: bot telegram key
         - sessions: connection sessions container
-        - initial_message_class: initial connection class
-        - initial_message_args: initial connection class args
-        - handler_class: request processing class
+        - message: message class
+        - message_args: imessage class args
+        - handler: handler class
     """
     TIMEOUT_READ = 5
     TIMEOUT_CONNECT = TIMEOUT_READ
-    INIT_MESSAGE = "start"
+    INIT_STRING = "start"
 
     def __init__(
             self,
             tg_key: str,
-            init_message: str = INIT_MESSAGE
+            init_string: str = INIT_STRING
     ) -> None:
         """
         Session object constructor.
 
         Parameters:
             - tg_key: Telegram bot API key
-            - init_message: init session message
+            - init_string: init session message
         """
         if not isinstance(tg_key, str):
             raise KeyError("Telegram API Key must be a string.")
@@ -81,26 +81,26 @@ class Session:
             logger.info(
                 f"Connected to Telegram bot {bot.name}({bot.first_name})")
         except Unauthorized as error:
-            raise AttributeError(f"Bot matching by key {tg_key} not found.") \
-                from error
+            raise AttributeError(f"Bot matching by key "
+                                 f"{tg_key} not found.") from error
 
         self._tg_key = tg_key
         self.sessions: List[Handler] = []
-        self.init_message_class: Optional[Type[ABCMessage]] = None
-        self.init_message_args: Optional[List[Any]] = None
+        self.message: Optional[Type[ABCMessage]] = None
+        self.message_args: Optional[List[Any]] = None
         self.handler_class: Optional[Type["Handler"]] = None
 
         # add command handlers
         dispatcher.add_handler(
-            CommandHandler(init_message, self._send_start_message_))
+            CommandHandler(init_string, self._send_start_message_))
 
         dispatcher.add_handler(
             MessageHandler(telegram.ext.Filters.text,
-                           self._button_select_callback))
+                           self._on_button_callback))
 
         dispatcher.add_handler(
             MessageHandler(telegram.ext.Filters.status_update.web_app_data,
-                           self._web_app_callback))
+                           self._on_web_callback))
 
         dispatcher.add_handler((
             CallbackQueryHandler(self._button_inline_select_callback)))
@@ -112,8 +112,8 @@ class Session:
 
     def start(
             self,
-            init_message_class: Type[ABCMessage],
-            init_message_args: Optional[List[Any]] = None,
+            message: Type[ABCMessage],
+            message_args: Optional[List[Any]] = None,
             polling: bool = True,
             idle: bool = False,
             handler_class: Optional[Type["Handler"]] = None
@@ -122,24 +122,24 @@ class Session:
         Activate scheduler and dispatcher.
 
         Parameters:
-            - init_message_class: class used to create start message
-            - init_message_args: optional arguments passed to start class
+            - message: class used to create message
+            - message_args: optional message class args
             - polling: if True - start polling updates from telegram
-            - idle: if True - blocks until one of the signals are received and
-              stops the updater
+            - idle: if True - blocks until one of the signals are
+              received and stops the updater
             - handler_class: optional class extended base handler class
         """
-        self.init_message_class = init_message_class
-        self.init_message_args = init_message_args
+        self.message = message
+        self.message_args = message_args
         self.handler_class = handler_class
 
-        if not issubclass(init_message_class, ABCMessage):
-            raise AttributeError("init_message_class must be ABCMessage!")
-        if init_message_args is not None and \
-                not isinstance(init_message_args, list):
-            raise AttributeError("init_message_args is not a lis!")
+        if not issubclass(message, ABCMessage):
+            raise AttributeError("message must be ABCMessage type!")
+        if message_args is not None and \
+                not isinstance(message_args, list):
+            raise AttributeError("message_args is not a list!")
         if not issubclass(self.handler_class, Handler):
-            raise AttributeError("handler_class must be a Handler!")
+            raise AttributeError("handler must be a Handler type!")
 
         if not self.scheduler.running:
             self.scheduler.start()
@@ -148,7 +148,7 @@ class Session:
         if idle:
             self.updater.idle()
 
-    def _send_start_message(
+    def _on_start_message(
             self,
             update: Update,
             _: CallbackContext
@@ -167,14 +167,14 @@ class Session:
             self._tg_key, chat, self.scheduler)
         self.sessions.append(session)
 
-        if self.init_message_class is None:
+        if self.message is None:
             raise AttributeError("Error! Message class not defined.")
-        if self.init_message_args is not None:
-            start_message = self.init_message_class(
+        if self.message_args is not None:
+            start_message = self.message(
                 session,
-                message_args=self.init_message_args)
+                message_args=self.message_args)
         else:
-            start_message = self.init_message_class(session)
+            start_message = self.message(session)
 
         session.goto_menu(start_message)
 
@@ -187,7 +187,7 @@ class Session:
             return None
         return sessions[0]
 
-    def _web_app_callback(
+    def _on_web_callback(
             self,
             update: Update,
             context: Any
@@ -201,7 +201,7 @@ class Session:
         session = self.get_session(update.effective_chat.id)
 
         if session is None:
-            self._send_start_message(update, context)
+            self._on_start_message(update, context)
             return
 
         session.app_message_webapp_callback(
@@ -209,7 +209,7 @@ class Session:
             update.effective_message.web_app_data.button_text
         )
 
-    def _button_select_callback(
+    def _on_button_callback(
             self,
             update: Update,
             context: CallbackContext
@@ -223,7 +223,7 @@ class Session:
         session = self.get_session(update.effective_chat.id)
 
         if session is None:
-            self._send_start_message(update, context)
+            self._on_start_message(update, context)
             return
 
         session.select_menu_button(update.message.text)
@@ -260,7 +260,7 @@ class Session:
         session = self.get_session(update.effective_chat.id)
 
         if session is None:
-            self._send_start_message(update, context)
+            self._on_start_message(update, context)
             return
 
         session.app_message_button_callback(
