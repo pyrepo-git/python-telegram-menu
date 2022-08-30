@@ -44,7 +44,7 @@ class Session:
         - _tg_key: bot telegram key
         - sessions: connection sessions container
         - message: message class
-        - message_args: imessage class args
+        - message_args: message class args
         - handler: handler class
     """
     TIMEOUT_READ = 5
