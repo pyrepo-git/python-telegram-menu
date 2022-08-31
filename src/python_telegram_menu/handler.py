@@ -215,7 +215,7 @@ class Handler:
             content: str,
             keyboard: Optional[Union[ReplyKeyboardMarkup,
                                      InlineKeyboardMarkup]] = None,
-            noification: bool = True
+            notification: bool = True
     ) -> telegram.Message:
         """
         Send text message with HTML formatting.
@@ -225,7 +225,7 @@ class Handler:
             text=content,
             parse_mode=ParseMode.HTML,
             reply_markup=keyboard,
-            disable_notification=not noification
+            disable_notification=not notification
         )
 
     def edit_message(
@@ -369,7 +369,7 @@ class Handler:
         if bt_found.args is not None:
             action_status = bt_found.callback(bt_found.args)
         else:
-            action_status = =bt_found.callback()
+            action_status = bt_found.callback()
 
         # send picture if custom label found
         if bt_found.button_type == ButtonTypes.PICTURE:
@@ -384,11 +384,11 @@ class Handler:
             return
         if bt_found.button_type == ButtonTypes.MESSAGE:
             self.send_message(action_status,
-                              noification=bt_found.notification)
+                              notification=bt_found.notification)
             self._bot.answer_callback_query(callback_id, text="Message sent!")
             return
         self._bot.answer_callback_query(callback_id, text=action_status)
 
         # update expiry period and update
         message.init_date_time()
-        self.edit_message()
+        self.edit_message(message)
