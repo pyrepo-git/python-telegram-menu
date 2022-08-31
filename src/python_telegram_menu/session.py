@@ -92,7 +92,7 @@ class Session:
 
         # add command handlers
         dispatcher.add_handler(
-            CommandHandler(init_string, self._on_start_message_))
+            CommandHandler(init_string, self._on_start_message))
 
         dispatcher.add_handler(
             MessageHandler(telegram.ext.Filters.text,
@@ -106,9 +106,9 @@ class Session:
             CallbackQueryHandler(self._on_inline_callback)))
 
         dispatcher.add_handler(
-            telegram.ext.PollAnswerHandler(self._poll_answer))
+            telegram.ext.PollAnswerHandler(self._on_poll_answer))
 
-        dispatcher.add_error_handler(self._msg_error_handler)
+        dispatcher.add_error_handler(self._on_error)
 
     def start(
             self,
@@ -228,7 +228,7 @@ class Session:
 
         session.select_menu_button(update.message.text)
 
-    def _poll_answer(
+    def _on_poll_answer(
             self,
             update: Update,
             _: CallbackContext
@@ -267,3 +267,32 @@ class Session:
             update.callback_query.data,
             update.callback_query.id
         )
+
+    def on_broadcast_message(
+            self,
+            message: str,
+            notification: bool = True
+    ) -> List[telegram.Message]:
+        """
+        Uses for broadcast messages
+        """
+        messages = []
+        for session in self.sessions:
+            mes = session.send_message(message, notification=notification)
+            if mes is not None:
+                messages.append(mes)
+        return messages
+
+    @staticmethod
+    def _on_error(
+            update: object,
+            context: CallbackContext
+    ) -> None:
+        if not isinstance(update, Update):
+            raise AttributeError("Incorrect update object")
+
+        error = str(context.error) if update is None \
+            else f"Update {update.update_id} - {str(context.error)}"
+
+        logger.error(error)
+
