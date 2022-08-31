@@ -97,9 +97,9 @@ class Handler:
         cnt_identical = content == message.content_previous
         kb_identical = [y.label for x in message.keyboard_previous
                         for y in x] == \
-                       [y.label for  x in message.keyboard for y in x]
+                       [y.label for x in message.keyboard for y in x]
 
-        if cnt_identical and kb_identical :
+        if cnt_identical and kb_identical:
             return False
 
         message.content_previous = content
@@ -261,7 +261,7 @@ class Handler:
     def select_menu_button(
             self,
             label: str
-    ) ->Optional[int]:
+    ) -> Optional[int]:
         """
         Menu button by label.
         """
@@ -269,7 +269,7 @@ class Handler:
         if label == "Back":
             if len(self._menu_queue) == 1:
                 return self._menu_queue[0].message_id  # we are already at home
-            previous = self._menu_queue.pop() # delete actual menu
+            previous = self._menu_queue.pop()  # delete actual menu
             if self._menu_queue:
                 previous = self._menu_queue.pop()
             return self.goto_menu(previous)
@@ -289,7 +289,7 @@ class Handler:
                     else:
                         msg_id = self.goto_menu(callback)
                 elif callback is not None and hasattr(callback, "__call__"):
-                    callback() # execute method
+                    callback()  # execute method
                 return msg_id
 
         # label does not match any sub-menu
@@ -310,3 +310,85 @@ class Handler:
             if last_app_message.date_time > last_menu_message.date_time:
                 last_menu_message = last_app_message
         last_menu_message.text_input(label)
+
+    def app_message_webapp_callback(
+            self,
+            webapp_data: str,
+            button_text: str
+    ) -> None:
+        """
+        Execute web app callback.
+        """
+        last_menu = self._menu_queue[-1]
+        webapp_message = next(iter(y for x in last_menu.keyboard
+                                   for y in x if y.label == button_text), None)
+        if webapp_message is not None and callable(webapp_message.callback):
+            html_response = webapp_message.callback(webapp_data)
+
+        self.send_message(html_response,
+                          noification=webapp_message.notification)
+
+    def app_message_button_callback(
+            self,
+            callback_label: str,
+            callback_id: str
+    ) -> None:
+        """
+        Execute action after message button selected/
+        """
+        label_message, label_action = callback_label.split(".")
+        log_message = \
+            self.filter_unicode(f"Received action request from "
+                                f"'{label_message}':'{label_action}'")
+        logger.info(log_message)
+
+        message = self.get_message(label_message)
+        if message is None:
+            logger.error(f"Message with label {label_message} not found")
+            return
+
+        bt_found = message.get_button(label_action)
+        if bt_found is None:
+            logger.error(f"Button with label {label_action} not found")
+            return
+
+        if bt_found.button_type in [ButtonTypes.PICTURE, ButtonTypes.STICKER]:
+            self._bot.send_chat_action(chat_id=self.chat_id,
+                                       action=ChatAction.UPLOAD_PHOTO)
+        elif bt_found.button_type == ButtonTypes.MESSAGE:
+            self._bot.send_chat_action(chat_id=self.chat_id,
+                                       action=ChatAction.TYPING)
+        elif bt_found.button_type == ButtonTypes.POLL:
+            self.send_poll(question=bt_found.args[0],
+                           options=bt_found[1])
+            self._poll_callback = bt_found.callback
+            self._bot.answer_callback_query(callback_id,
+                                            text="Select an answer...")
+            return
+
+        if bt_found.args is not None:
+            action_status = bt_found.callback(bt_found.args)
+        else:
+            action_status = =bt_found.callback()
+
+        # send picture if custom label found
+        if bt_found.button_type == ButtonTypes.PICTURE:
+            self.send_photo(picture_path=action_status,
+                            notofication=bt_found.notification)
+            self._bot.answer_callback_query(callback_id, text="Picture sent!")
+            return
+        if bt_found.button_type == ButtonTypes.STICKER:
+            self.send_sticker(sticker_path=action_status,
+                              notification=bt_found.notification)
+            self._bot.answer_callback_query(callback_id, text="Sticker sent!")
+            return
+        if bt_found.button_type == ButtonTypes.MESSAGE:
+            self.send_message(action_status,
+                              noification=bt_found.notification)
+            self._bot.answer_callback_query(callback_id, text="Message sent!")
+            return
+        self._bot.answer_callback_query(callback_id, text=action_status)
+
+        # update expiry period and update
+        message.init_date_time()
+        self.edit_message()
