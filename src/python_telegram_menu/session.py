@@ -332,5 +332,4 @@ class Session:
 
         error = str(context.error) if update is None \
             else f"Update {update.update_id} - {str(context.error)}"
-
         logger.error(error)
