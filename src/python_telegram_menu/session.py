@@ -13,7 +13,6 @@ import time
 from pathlib import Path
 from typing import Any, List, Optional, Type, Union
 
-import telegram
 import telegram.ext
 import validators
 from apscheduler.schedulers.base import BaseScheduler
