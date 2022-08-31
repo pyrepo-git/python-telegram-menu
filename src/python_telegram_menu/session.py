@@ -325,6 +325,9 @@ class Session:
             update: object,
             context: CallbackContext
     ) -> None:
+        """
+        Log error
+        """
         if not isinstance(update, Update):
             raise AttributeError("Incorrect update object")
 
