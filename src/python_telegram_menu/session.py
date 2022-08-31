@@ -13,6 +13,7 @@ import time
 from pathlib import Path
 from typing import Any, List, Optional, Type, Union
 
+import telegram
 import telegram.ext
 import validators
 from apscheduler.schedulers.base import BaseScheduler
@@ -221,7 +222,7 @@ class Session:
             context: CallbackContext
     ) -> None:
         """
-        Select callback for menu item
+        Select menu item
         """
         if update.effective_chat is None:
             raise AttributeError("Error! Chat object nut found.")
@@ -240,7 +241,7 @@ class Session:
             _: CallbackContext
     ) -> None:
         """
-        Used for poll session.
+        Poll message for user session.
         """
         if update.effective_user is None:
             raise AttributeError("Error! user object not found.")
@@ -258,7 +259,7 @@ class Session:
             context: CallbackContext
     ) -> None:
         """
-        Select inline callback.
+        Select and execute inline callback.
         """
         if update.effective_chat is None:
             raise AttributeError("Error! Chat object not found.")
@@ -280,11 +281,41 @@ class Session:
             notification: bool = True
     ) -> List[telegram.Message]:
         """
-        Uses for broadcast messages
+        Broadcast messages for all sessions.
         """
         messages = []
         for session in self.sessions:
             mes = session.send_message(message, notification=notification)
+            if mes is not None:
+                messages.append(mes)
+        return messages
+
+    def on_broadcast_picture(
+            self,
+            picture_path: str,
+            notification: bool = True
+    ) -> List[telegram.Message]:
+        """
+        Broadcast picture messages.
+        """
+        messages = []
+        for session in self.sessions:
+            mes = session.send_photo(picture_path, notification=notification)
+            if mes is not None:
+                messages.append(mes)
+        return messages
+
+    def on_broadcast_sticker(
+            self,
+            sticker_path: str,
+            notification: bool = True
+    ) -> List[telegram.Message]:
+        """
+        Broadcast sticker messages.
+        """
+        messages = []
+        for session in self.sessions:
+            mes = session.send_sticker(sticker_path, notification=notification)
             if mes is not None:
                 messages.append(mes)
         return messages
