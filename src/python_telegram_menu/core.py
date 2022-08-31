@@ -49,7 +49,7 @@ class Button:
     Class members:
         - label: button label
         - callback: method called on button selection
-        - btype: button type
+        - button_type: button type
         - args: argument passed to the callback
         - notification: send notification to user
         - web_url - web application
