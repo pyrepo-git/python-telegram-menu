@@ -50,18 +50,21 @@ class Session:
     TIMEOUT_READ = 5
     TIMEOUT_CONNECT = TIMEOUT_READ
     INIT_STRING = "start"
+    BROADCAST_STRING = "broadcast"
 
     def __init__(
             self,
             tg_key: str,
-            init_string: str = INIT_STRING
+            init_string: str = INIT_STRING,
+            broadcast_string: str = BROADCAST_STRING
     ) -> None:
         """
         Session object constructor.
 
         Parameters:
             - tg_key: Telegram bot API key
-            - init_string: init session message
+            - init_string: for init session message
+            - broadcast_string: for broadcast session message
         """
         if not isinstance(tg_key, str):
             raise KeyError("Telegram API Key must be a string.")
@@ -93,6 +96,9 @@ class Session:
         # add command handlers
         dispatcher.add_handler(
             CommandHandler(init_string, self._on_start_message))
+
+        dispatcher.add_handler(
+            CommandHandler(broadcast_string, self._on_start_message))
 
         dispatcher.add_handler(
             MessageHandler(telegram.ext.Filters.text,
@@ -295,4 +301,3 @@ class Session:
             else f"Update {update.update_id} - {str(context.error)}"
 
         logger.error(error)
-
