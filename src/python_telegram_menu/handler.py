@@ -251,7 +251,7 @@ class Handler:
                 chart_id=self.chat_id,
                 message_id=mes.message_id,
                 parse_mode=ParseMode.HTML,
-                reply_markup=Keyboard_format
+                reply_markup=keyboard_format
             )
         except telegram.error.BadRequest as error:
             logger.error(error)
