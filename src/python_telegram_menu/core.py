@@ -249,8 +249,7 @@ class ABCMessage(ABC):
         return self.notification.edit_message(self)
 
     def gen_keyboard_content(
-            self,
-            inlined: Optional[bool] = None
+            self, inlined: Optional[bool] = None
     ) -> Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]:
         """
         Generate keyboard content.
@@ -258,8 +257,9 @@ class ABCMessage(ABC):
         if inlined is None:
             inlined = self.inlined
         keyboard_buttons = []
-        button_object = telegram.InlineKeyboardButton \
-            if inlined else KeyboardButton
+        button_object = (
+            telegram.InlineKeyboardButton if inlined else KeyboardButton
+        )
 
         for row in self.keyboard:
             if not self.input_field and row:
@@ -273,7 +273,7 @@ class ABCMessage(ABC):
                         button_object(
                             text=btn.label,
                             web_app=WebAppInfo(url=btn.web_url),
-                            callback_data=f"{self.label}.{btn.label}"
+                            callback_data=f"{self.label}.{btn.label},"
                         )
                     )
                 else:
