@@ -164,10 +164,7 @@ class Handler:
         """
         self._bot.delete_message(chat_id=self.chat_id, message_id=message_id)
 
-    def _delete_queued_message(
-            self,
-            message: ABCMessage
-    ) -> None:
+    def _delete_queued_message(self, message: ABCMessage) -> None:
         """
         Delete and remove message from queue.
         """
@@ -176,10 +173,7 @@ class Handler:
             self.delete_message(message.message_id)
         del message
 
-    def goto_menu(
-            self,
-            message: ABCMessage
-    ) -> int:
+    def goto_menu(self, message: ABCMessage) -> int:
         """
         Send and add message to queue.
         """
@@ -189,17 +183,15 @@ class Handler:
 
         keyboard = message.gen_keyboard_content(inlined=False)
 
-        mes = self.send_message(emoji_replace(content),
-                                keyboard,
-                                notification=message.notification)
+        mes = self.send_message(
+            emoji_replace(content), keyboard, notification=message.notification
+        )
 
         message.init_date_time()
         self._menu_queue.append(message)
         return mes.message_id
 
-    def goto_home(
-            self
-    ) -> int:
+    def goto_home(self) -> int:
         """
         Returns to home menu.
         Clear menu_queue.
@@ -215,9 +207,7 @@ class Handler:
         return self.goto_menu(previous)
 
     def _send_app_message(
-            self,
-            message: ABCMessage,
-            label: str
+            self, message: ABCMessage, label: str
     ) -> int:
         """
         Send app message.
@@ -247,8 +237,9 @@ class Handler:
     def send_message(
             self,
             content: str,
-            keyboard: Optional[Union[ReplyKeyboardMarkup,
-                                     InlineKeyboardMarkup]] = None,
+            keyboard: Optional[
+                Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]
+            ] = None,
             notification: bool = True
     ) -> telegram.Message:
         """
