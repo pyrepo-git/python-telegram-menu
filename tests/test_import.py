@@ -1,5 +1,4 @@
-import libname
-
+import python_telegram_menu
 
 def test_import():
-    assert libname
+    assert python_telegram_menu
