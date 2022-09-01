@@ -31,9 +31,7 @@ TypeKeyboard = List[List["Button"]]
 
 # noinspection PyArgumentList
 class ButtonTypes(Enum):
-    """
-    Button types.
-    """
+    """Button types."""
     
     NOTIFICATION = auto()
     MESSAGE = auto()
@@ -46,7 +44,6 @@ class ButtonTypes(Enum):
 class Button:
     """
     Base button class - wrapper for label with callback.
-    
     Class members:
         - label: button label
         - callback: method called on button selection
