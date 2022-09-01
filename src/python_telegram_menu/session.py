@@ -289,7 +289,7 @@ class Session:
         return messages
 
     def on_broadcast_sticker(
-            self, sticker_path: str, notification: bool = True
+        self, sticker_path: str, notification: bool = True
     ) -> List[telegram.Message]:
         """
         Broadcast sticker messages.
@@ -309,6 +309,9 @@ class Session:
         if not isinstance(update, Update):
             raise AttributeError("Incorrect update object")
 
-        error = str(context.error) if update is None \
+        error = (
+            str(context.error) 
+            if update is None
             else f"Update {update.update_id} - {str(context.error)}"
+        )
         logger.error(error)
