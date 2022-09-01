@@ -43,7 +43,7 @@ class Session:
     def __init__(
             self,
             tg_key: str,
-            init_string: str = INIT_STRING,
+            start_message: str = INIT_STRING,
             broadcast_string: str = BROADCAST_STRING
     ) -> None:
         """
@@ -51,7 +51,7 @@ class Session:
 
         Parameters:
             - tg_key: Telegram bot API key
-            - init_string: for init session message
+            - start_message: for init session message
             - broadcast_string: for broadcast session message
         """
         if not isinstance(tg_key, str):
@@ -77,13 +77,13 @@ class Session:
 
         self._tg_key = tg_key
         self.sessions: List[Handler] = []
-        self.message: Optional[Type[ABCMessage]] = None
-        self.message_args: Optional[List[Any]] = None
-        self.handler_class: Optional[Type["Handler"]] = None
+        self.start_message_class: Optional[Type[ABCMessage]] = None
+        self.start_message_args: Optional[List[Any]] = None
+        self.navigation_handler_class: Optional[Type["Handler"]] = None
 
         # add command handlers
         dispatcher.add_handler(
-            CommandHandler(init_string, self._on_start_message))
+            CommandHandler(start_message, self._on_start_message))
 
         dispatcher.add_handler(
             CommandHandler(broadcast_string, self._on_start_message))
@@ -106,11 +106,11 @@ class Session:
 
     def start(
             self,
-            message: Type[ABCMessage],
-            message_args: Optional[List[Any]] = None,
+            start_message: Type[ABCMessage],
+            start_message_args: Optional[List[Any]] = None,
             polling: bool = True,
             idle: bool = False,
-            handler_class: Optional[Type["Handler"]] = None
+            navigation_handler_class: Optional[Type["Handler"]] = None
     ) -> None:
         """
         Activate scheduler and dispatcher.
@@ -123,16 +123,16 @@ class Session:
               received and stops the updater
             - handler_class: optional class extended base handler class
         """
-        self.message = message
-        self.message_args = message_args
-        self.handler_class = handler_class
+        self.start_message_class = start_message
+        self.start_message_args = start_message_args
+        self.navigation_handler_class = navigation_handler_class
 
-        if not issubclass(message, ABCMessage):
+        if not issubclass(start_message, ABCMessage):
             raise AttributeError("message must be ABCMessage type!")
-        if message_args is not None and \
-                not isinstance(message_args, list):
+        if start_message_args is not None and \
+                not isinstance(start_message_args, list):
             raise AttributeError("message_args is not a list!")
-        if not issubclass(self.handler_class, Handler):
+        if not issubclass(self.navigation_handler_class, Handler):
             raise AttributeError("handler must be a Handler type!")
 
         if not self.scheduler.running:
@@ -154,21 +154,21 @@ class Session:
 
         if chat is None:
             raise AttributeError("Error! Chat object not exist.")
-        if self.handler_class is None:
+        if self.navigation_handler_class is None:
             raise AttributeError("Error! Handler class not defined.")
 
-        session = self.handler_class(
+        session = self.navigation_handler_class(
             self._tg_key, chat, self.scheduler)
         self.sessions.append(session)
 
-        if self.message is None:
+        if self.start_message_class is None:
             raise AttributeError("Error! Message class not defined.")
-        if self.message_args is not None:
-            start_message = self.message(
-                session,
-                message_args=self.message_args)
+        if self.start_message_args is not None:
+            start_message = \
+                self.start_message_class(session,
+                                         message_args=self.start_message_args)
         else:
-            start_message = self.message(session)
+            start_message = self.start_message_class(session)
 
         session.goto_menu(start_message)
 
@@ -176,7 +176,7 @@ class Session:
             self,
             chat_id: int = 0
     ) -> Optional["Handler"]:
-        sessions = [x for x in self.sessions if chat_id in (x.chart_id, 0)]
+        sessions = [x for x in self.sessions if chat_id in (x.chat_id, 0)]
         if not sessions:
             return None
         return sessions[0]
@@ -238,7 +238,7 @@ class Session:
             if x.user_name == update.effective_user.first_name), None)
 
         if session:
-            session.poll_aswer(update.poll_answer.option_ids[0])
+            session.poll_answer(update.poll_answer.option_ids[0])
 
     def _on_inline_callback(
             self,

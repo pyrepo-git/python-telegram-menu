@@ -111,7 +111,7 @@ class ABCMessage(ABC):
             inlined: bool = False,
             notification: bool = True,
             input_field: str = "",
-            # **args: Optional[Any]
+            **args: Optional[Any]
     ) -> None:
         """
         ABCMessage object constructor.
@@ -132,6 +132,7 @@ class ABCMessage(ABC):
             else datetime.timedelta(minutes=self.EXPIRING_DELAY)
         )
         self._status = None
+        self.start_message_args = args
 
     @abstractmethod
     def update(self) -> str:

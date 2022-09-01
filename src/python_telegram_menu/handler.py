@@ -201,7 +201,7 @@ class Handler:
 
         keyboard = message.gen_keyboard_content(inlined=False)
 
-        mes = self.send_massage(emoji_replace(content),
+        mes = self.send_message(emoji_replace(content),
                                 keyboard,
                                 notification=message.notification)
 
@@ -340,7 +340,7 @@ class Handler:
 
         # label does not match any sub-menu
         # just process user input
-        self.capture_use_input(label)
+        self.capture_user_input(label)
         return None
 
     def capture_user_input(
@@ -370,9 +370,8 @@ class Handler:
                                    for y in x if y.label == button_text), None)
         if webapp_message is not None and callable(webapp_message.callback):
             html_response = webapp_message.callback(webapp_data)
-
-        self.send_message(html_response,
-                          noification=webapp_message.notification)
+            self.send_message(html_response,
+                              notification=webapp_message.notification)
 
     def app_message_button_callback(
             self,
@@ -406,7 +405,7 @@ class Handler:
                                        action=ChatAction.TYPING)
         elif bt_found.button_type == ButtonTypes.POLL:
             self.send_poll(question=bt_found.args[0],
-                           options=bt_found[1])
+                           options=bt_found.args[1])
             self._poll_callback = bt_found.callback
             self._bot.answer_callback_query(callback_id,
                                             text="Select an answer...")
@@ -495,7 +494,7 @@ class Handler:
         Send poll to user with questions and options.
         """
         if self.scheduler.get_job(self.poll_name) is not None:
-            self.pol_delete()
+            self.poll_delete()
 
         options = [emoji_replace(x) for x in options]
         self._poll = self._bot.send_poll(
