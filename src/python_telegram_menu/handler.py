@@ -37,10 +37,7 @@ class Handler:
     CONNECTION_POOL_SIZE = 8
 
     def __init__(
-            self,
-            tg_key: str,
-            chat: Chat,
-            scheduler: BaseScheduler
+            self, tg_key: str, chat: Chat, scheduler: BaseScheduler
     ) -> None:
         """
         Handler class initialization.
@@ -206,9 +203,7 @@ class Handler:
 
         return self.goto_menu(previous)
 
-    def _send_app_message(
-            self, message: ABCMessage, label: str
-    ) -> int:
+    def _send_app_message(self, message: ABCMessage, label: str) -> int:
         """
         Send app message.
         """
@@ -235,12 +230,12 @@ class Handler:
         return message.message_id
 
     def send_message(
-            self,
-            content: str,
-            keyboard: Optional[
-                Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]
-            ] = None,
-            notification: bool = True
+        self,
+        content: str,
+        keyboard: Optional[
+            Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]
+        ] = None,
+        notification: bool = True
     ) -> telegram.Message:
         """
         Send text message with HTML formatting.
