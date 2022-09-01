@@ -38,8 +38,8 @@ class ButtonTypes(Enum):
     PICTURE = auto()
     STICKER = auto()
     POLL = auto()
-    
-    
+
+
 @dataclass
 class Button:
     """
