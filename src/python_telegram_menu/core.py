@@ -56,13 +56,13 @@ class Button:
     """
 
     def __init__(
-            self,
-            label: str,
-            callback: TypeCallback = None,
-            button_type: ButtonTypes = ButtonTypes.NOTIFICATION,
-            args: Any = None,
-            notification: bool = True,
-            web_url: str = "",
+        self,
+        label: str,
+        callback: TypeCallback = None,
+        button_type: ButtonTypes = ButtonTypes.NOTIFICATION,
+        args: Any = None,
+        notification: bool = True,
+        web_url: str = "",
     ) -> None:
         """
         Button object constructor.
@@ -81,7 +81,7 @@ def emoji_replace(label: str) -> str:
     """
     match_emoji = re.findall(r"(:\w+:)", label)
     for item in match_emoji:
-        emoji_str = emoji.emojize(item, language='alias')
+        emoji_str = emoji.emojize(item, language="alias")
         label = label.replace(item, emoji_str)
     return label
 
@@ -103,15 +103,15 @@ class ABCMessage(ABC):
     date_time: datetime.datetime
 
     def __init__(
-            self,
-            handler: "Handler",
-            label: str = "",
-            expiry_period: Optional[datetime.timedelta] = None,
-            home_after: bool = False,
-            inlined: bool = False,
-            notification: bool = True,
-            input_field: str = "",
-            **args: Optional[Any],
+        self,
+        handler: "Handler",
+        label: str = "",
+        expiry_period: Optional[datetime.timedelta] = None,
+        home_after: bool = False,
+        inlined: bool = False,
+        notification: bool = True,
+        input_field: str = "",
+        **args: Optional[Any],
     ) -> None:
         """
         ABCMessage object constructor.
