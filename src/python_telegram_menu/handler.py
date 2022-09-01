@@ -32,6 +32,7 @@ class Handler:
     """
     Handle requests telegram bot requests.
     """
+
     POLL_DEALING = 10  # seconds
     MESSAGE_CHECK_TIMEOUT = POLL_DEALING
     CONNECTION_POOL_SIZE = 8
