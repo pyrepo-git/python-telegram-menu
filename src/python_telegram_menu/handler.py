@@ -505,16 +505,21 @@ class Handler:
         """
         Run when received poll message.
         """
-        if self._poll is None or self._poll_callback is None or not \
-                callable(self._poll_callback):
+        if (
+            self._poll is None
+            or self._poll_callback is None
+            or not callable(self._poll_callback)
+        ):
             logger.error("Poll not defined")
             return
 
         answer_ascii = self._poll.poll.options[answer_id].text
         answer_ascii.encode("ascii", "ignore").decode()
 
-        logger.info(f"{self.user_name}'s answer to question "
-                    f"'{self._poll.poll.question}' is '{answer_ascii}'")
+        logger.info(
+            f"{self.user_name}'s answer to question "
+            f"'{self._poll.poll.question}' is '{answer_ascii}'"
+        )
 
         self._poll_callback(self._poll.poll.options[answer_id].text)
         time.sleep(1)
