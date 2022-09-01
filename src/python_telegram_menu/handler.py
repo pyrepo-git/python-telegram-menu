@@ -73,26 +73,21 @@ class Handler:
         )
 
     @staticmethod
-    def filter_unicode(
-            string: str
-    ) -> str:
+    def filter_unicode(string: str) -> str:
         """
         Remove non-unicode characters.
         """
         return string.encode("ascii", "ignore").decode("utf-8")
 
     @staticmethod
-    def _message_check_changes(
-            message: ABCMessage,
-            content: str
-    ) -> bool:
+    def _message_check_changes(message: ABCMessage, content: str) -> bool:
         """
         Check is message content and keyboard has changed since last edit.
         """
         cnt_identical = content == message.content_previous
-        kb_identical = [y.label for x in message.keyboard_previous
-                        for y in x] == \
-                       [y.label for x in message.keyboard for y in x]
+        kb_identical = [
+            y.label for x in message.keyboard_previous for y in x
+        ] == [y.label for x in message.keyboard for y in x]
 
         if cnt_identical and kb_identical:
             return False
@@ -102,9 +97,7 @@ class Handler:
         return True
 
     @staticmethod
-    def _sticker_check_replace(
-            sticker_path: str
-    ) -> Union[str, bytes]:
+    def _sticker_check_replace(sticker_path: str) -> Union[str, bytes]:
         """
         Check correctness sticker path.
         If not replace be default.
@@ -120,14 +113,14 @@ class Handler:
             raise ValueError("Pats is not a picture")
         except ValueError:
             url_default = f"{__raw_url__}/resources/stats_default.webp"
-            logger.error(f"Picture path '{sticker_path}' not valid."
-                         f"Replaced by default {url_default}")
+            logger.error(
+                f"Picture path '{sticker_path}' not valid."
+                f"Replaced by default {url_default}"
+            )
             return url_default
 
     @staticmethod
-    def _picture_check_replace(
-            picture_path: str
-    ) -> Union[str, bytes]:
+    def _picture_check_replace(picture_path: str) -> Union[str, bytes]:
         """
         Check correctness picture path.
         If not replace be default.
@@ -148,13 +141,13 @@ class Handler:
 
         except ValueError:
             url_default = f"{__raw_url__}/resources/stats_default.png"
-            logger.error(f"Picture path '{picture_path}' invalid."
-                         f"Replaced by default {url_default}")
+            logger.error(
+                f"Picture path '{picture_path}' invalid."
+                f"Replaced by default {url_default}"
+            )
             return url_default
 
-    def _expiry_date_checker(
-            self
-    ) -> None:
+    def _expiry_date_checker(self) -> None:
         """
         Check expiry message date abd delete on expired.
         """
@@ -162,19 +155,14 @@ class Handler:
             if message.is_expired():
                 self._delete_queued_message(message)
 
-        if len(self._menu_queue) >= 2 and \
-                self._menu_queue[-1].is_expired():
+        if len(self._menu_queue) >= 2 and self._menu_queue[-1].is_expired():
             self.goto_home()
 
-    def delete_message(
-            self,
-            message_id: int
-    ) -> None:
+    def delete_message(self, message_id: int) -> None:
         """
         Delete telegram message by id.
         """
-        self._bot.delete_message(chat_id=self.chat_id,
-                                 message_id=message_id)
+        self._bot.delete_message(chat_id=self.chat_id, message_id=message_id)
 
     def _delete_queued_message(
             self,
