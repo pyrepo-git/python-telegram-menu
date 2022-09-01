@@ -45,7 +45,7 @@ class ButtonTypes(Enum):
 class Button:
     """
     Base button class - wrapper for label with callback.
-
+    
     Class members:
         - label: button label
         - callback: method called on button selection
@@ -53,7 +53,7 @@ class Button:
         - args: argument passed to the callback
         - notification: send notification to user
         - web_url - web application
-        """
+    """
 
     def __init__(
             self,
@@ -62,7 +62,7 @@ class Button:
             button_type: ButtonTypes = ButtonTypes.NOTIFICATION,
             args: Any = None,
             notification: bool = True,
-            web_url: str = ""
+            web_url: str = "",
     ) -> None:
         """
         Button object constructor.
@@ -111,7 +111,7 @@ class ABCMessage(ABC):
             inlined: bool = False,
             notification: bool = True,
             input_field: str = "",
-            **args: Optional[Any]
+            **args: Optional[Any],
     ) -> None:
         """
         ABCMessage object constructor.
