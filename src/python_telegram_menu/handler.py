@@ -505,9 +505,9 @@ class Handler:
         Run when received poll message.
         """
         if (
-            self._poll is None
-            or self._poll_callback is None
-            or not callable(self._poll_callback)
+            self._poll is None or
+            self._poll_callback is None or
+            not callable(self._poll_callback)
         ):
             logger.error("Poll not defined")
             return
