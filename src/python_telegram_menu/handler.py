@@ -32,7 +32,6 @@ class Handler:
     """
     Handle requests telegram bot requests.
     """
-    
     POLL_DEALING = 10  # seconds
     MESSAGE_CHECK_TIMEOUT = POLL_DEALING
     CONNECTION_POOL_SIZE = 8
@@ -246,7 +245,7 @@ class Handler:
             text=content,
             parse_mode=ParseMode.HTML,
             reply_markup=keyboard,
-            disable_notification=not notification
+            disable_notification=not notification,
         )
 
     def edit_message(self, message: ABCMessage) -> bool:
@@ -397,8 +396,9 @@ class Handler:
             self._bot.answer_callback_query(callback_id, text="Picture sent!")
             return
         if bt_found.button_type == ButtonTypes.STICKER:
-            self.send_sticker(sticker_path=action_status,
-                              notification=bt_found.notification)
+            self.send_sticker(
+                sticker_path=action_status, notification=bt_found.notification
+            )
             self._bot.answer_callback_query(callback_id, text="Sticker sent!")
             return
         if bt_found.button_type == ButtonTypes.MESSAGE:
@@ -424,7 +424,7 @@ class Handler:
             return self._bot.send_photo(
                 chat_id=self.chat_id, 
                 photo=picture_object,
-                disable_notification=not notification
+                disable_notification=not notification,
             )
         except telegram.error.BadRequest as error:
             logger.error(f"Failed send picture {picture_path}:{error}")
@@ -442,7 +442,7 @@ class Handler:
             return self._bot.send_sticker(
                 chat_id=self.chat_id,
                 sticker=sticker_object,
-                disable_notification=not notification
+                disable_notification=not notification,
             )
         except telegram.error.BadRequest as error:
             logger.error(f"failed send sticker {sticker_path}:{error}")
@@ -457,9 +457,7 @@ class Handler:
             iter(x for x in self._message_queue if x.label == label), None
         )
 
-    def send_poll(
-        self, question: str, options: List[str]
-    ) -> None:
+    def send_poll(self, question: str, options: List[str]) -> None:
         """
         Send poll to user with questions and options.
         """
@@ -483,7 +481,7 @@ class Handler:
             "date",
             id=self.poll_name,
             next_run_time=next_time,
-            replace_existing=True
+            replace_existing=True,
         )
 
     def poll_delete(self) -> None:
