@@ -52,7 +52,7 @@ class Button:
         - notification: send notification to user
         - web_url - web application
     """
-    
+
     def __init__(
         self,
         label: str,
