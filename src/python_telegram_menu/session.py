@@ -100,14 +100,12 @@ class Session:
 
         dispatcher.add_handler(
             MessageHandler(
-                telegram.ext.Filters.status_update.web_app_data, 
+                telegram.ext.Filters.status_update.web_app_data,
                 self._on_web_callback,
             )
         )
 
-        dispatcher.add_handler(
-            CallbackQueryHandler(self._on_inline_callback)
-        )
+        dispatcher.add_handler(CallbackQueryHandler(self._on_inline_callback))
 
         dispatcher.add_handler(
             telegram.ext.PollAnswerHandler(self._on_poll_answer)
@@ -121,7 +119,7 @@ class Session:
         start_message_args: Optional[List[Any]] = None,
         polling: bool = True,
         idle: bool = False,
-        navigation_handler_class: Optional[Type["Handler"]] = None
+        navigation_handler_class: Optional[Type["Handler"]] = None,
     ) -> None:
         """
         Activate scheduler and dispatcher.
@@ -140,8 +138,9 @@ class Session:
 
         if not issubclass(start_message, ABCMessage):
             raise AttributeError("message must be ABCMessage type!")
-        if start_message_args is not None and \
-                not isinstance(start_message_args, list):
+        if start_message_args is not None and not isinstance(
+            start_message_args, list
+        ):
             raise AttributeError("message_args is not a list!")
         if not issubclass(self.navigation_handler_class, Handler):
             raise AttributeError("handler must be a Handler type!")
@@ -153,11 +152,7 @@ class Session:
         if idle:
             self.updater.idle()
 
-    def _on_start_message(
-            self,
-            update: Update,
-            _: CallbackContext
-    ) -> None:
+    def _on_start_message(self, update: Update, _: CallbackContext) -> None:
         """
         Start bot telegram session.
         """
@@ -169,34 +164,31 @@ class Session:
             raise AttributeError("Error! Handler class not defined.")
 
         session = self.navigation_handler_class(
-            self._tg_key, chat, self.scheduler)
+            self._tg_key, chat, self.scheduler
+        )
         self.sessions.append(session)
 
         if self.start_message_class is None:
             raise AttributeError("Error! Message class not defined.")
         if self.start_message_args is not None:
-            start_message = \
-                self.start_message_class(session,
-                                         message_args=self.start_message_args)
+            start_message = self.start_message_class(
+                session, message_args=self.start_message_args
+            )
         else:
             start_message = self.start_message_class(session)
 
         session.goto_menu(start_message)
 
-    def get_session(
-            self,
-            chat_id: int = 0
-    ) -> Optional["Handler"]:
+    def get_session(self, chat_id: int = 0) -> Optional["Handler"]:
+        """
+        Get session by chat_id.
+        """
         sessions = [x for x in self.sessions if chat_id in (x.chat_id, 0)]
         if not sessions:
             return None
         return sessions[0]
 
-    def _on_web_callback(
-            self,
-            update: Update,
-            context: Any
-    ) -> None:
+    def _on_web_callback(self, update: Update, context: Any) -> None:
         """
         Callback for webapp results
         """
