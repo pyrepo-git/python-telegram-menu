@@ -8,15 +8,13 @@ Data structures and abstract interface.
 import re
 import logging
 import datetime
-
+import emoji
+import telegram
+import validators
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from enum import Enum, auto
 from typing import TYPE_CHECKING, Any, Callable, List, Optional, Union
-
-import emoji
-import telegram
-import validators
 from telegram import InlineKeyboardMarkup, KeyboardButton
 from telegram import ReplyKeyboardMarkup, WebAppInfo
 
@@ -31,15 +29,16 @@ TypeKeyboard = List[List["Button"]]
 
 # noinspection PyArgumentList
 class ButtonTypes(Enum):
-    """Button types."""
-    
+    """
+    Button types.
+    """
     NOTIFICATION = auto()
     MESSAGE = auto()
     PICTURE = auto()
     STICKER = auto()
     POLL = auto()
-
-
+    
+    
 @dataclass
 class Button:
     """
@@ -52,7 +51,6 @@ class Button:
         - notification: send notification to user
         - web_url - web application
     """
-
     def __init__(
         self,
         label: str,
