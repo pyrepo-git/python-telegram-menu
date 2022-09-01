@@ -422,7 +422,7 @@ class Handler:
         picture_object = self._picture_check_replace(picture_path=picture_path)
         try:
             return self._bot.send_photo(
-                chat_id=self.chat_id, 
+                chat_id=self.chat_id,
                 photo=picture_object,
                 disable_notification=not notification,
             )
