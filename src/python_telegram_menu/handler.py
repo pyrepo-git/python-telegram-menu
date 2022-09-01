@@ -304,10 +304,7 @@ class Handler:
             return False
         return True
 
-    def select_menu_button(
-            self,
-            label: str
-    ) -> Optional[int]:
+    def select_menu_button(self, label: str) -> Optional[int]:
         """
         Menu button by label.
         """
@@ -343,10 +340,7 @@ class Handler:
         self.capture_user_input(label)
         return None
 
-    def capture_user_input(
-            self,
-            label: str
-    ) -> None:
+    def capture_user_input(self, label: str) -> None:
         """
         Process user input in last message updated.
         """
@@ -358,9 +352,7 @@ class Handler:
         last_menu_message.text_input(label)
 
     def app_message_webapp_callback(
-            self,
-            webapp_data: str,
-            button_text: str
+        self, webapp_data: str, button_text: str
     ) -> None:
         """
         Execute web app callback.
