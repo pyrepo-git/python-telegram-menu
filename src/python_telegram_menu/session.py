@@ -73,7 +73,8 @@ class Session:
 
         try:
             logger.info(
-                f"Connected to Telegram bot {bot.name}({bot.first_name})")
+                f"Connected to Telegram bot {bot.name}({bot.first_name})"
+            )
         except Unauthorized as error:
             raise AttributeError(
                 f"Bot matching by key {tg_key} not found."
@@ -203,13 +204,11 @@ class Session:
 
         session.app_message_webapp_callback(
             update.effective_message.web_app_data.data,
-            update.effective_message.web_app_data.button_text
+            update.effective_message.web_app_data.button_text,
         )
 
     def _on_button_callback(
-            self,
-            update: Update,
-            context: CallbackContext
+            self, update: Update, context: CallbackContext
     ) -> None:
         """
         Select menu item
@@ -225,28 +224,27 @@ class Session:
 
         session.select_menu_button(update.message.text)
 
-    def _on_poll_answer(
-            self,
-            update: Update,
-            _: CallbackContext
-    ) -> None:
+    def _on_poll_answer(self, update: Update, _: CallbackContext) -> None:
         """
         Poll message for user session.
         """
         if update.effective_user is None:
             raise AttributeError("Error! user object not found.")
 
-        session = next((
-            x for x in self.sessions
-            if x.user_name == update.effective_user.first_name), None)
+        session = next(
+            (
+                x 
+                for x in self.sessions
+                if x.user_name == update.effective_user.first_name
+            ), 
+            None,
+        )
 
         if session:
             session.poll_answer(update.poll_answer.option_ids[0])
 
     def _on_inline_callback(
-            self,
-            update: Update,
-            context: CallbackContext
+            self, update: Update, context: CallbackContext
     ) -> None:
         """
         Select and execute inline callback.
@@ -261,14 +259,11 @@ class Session:
             return
 
         session.app_message_button_callback(
-            update.callback_query.data,
-            update.callback_query.id
+            update.callback_query.data, update.callback_query.id
         )
 
     def on_broadcast_message(
-            self,
-            message: str,
-            notification: bool = True
+            self, message: str, notification: bool = True
     ) -> List[telegram.Message]:
         """
         Broadcast messages for all sessions.
@@ -281,9 +276,7 @@ class Session:
         return messages
 
     def on_broadcast_picture(
-            self,
-            picture_path: str,
-            notification: bool = True
+            self, picture_path: str, notification: bool = True
     ) -> List[telegram.Message]:
         """
         Broadcast picture messages.
@@ -296,9 +289,7 @@ class Session:
         return messages
 
     def on_broadcast_sticker(
-            self,
-            sticker_path: str,
-            notification: bool = True
+            self, sticker_path: str, notification: bool = True
     ) -> List[telegram.Message]:
         """
         Broadcast sticker messages.
@@ -311,10 +302,7 @@ class Session:
         return messages
 
     @staticmethod
-    def _on_error(
-            update: object,
-            context: CallbackContext
-    ) -> None:
+    def _on_error(update: object, context: CallbackContext) -> None:
         """
         Log error
         """
