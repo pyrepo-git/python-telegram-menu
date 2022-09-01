@@ -35,16 +35,17 @@ class Session:
         - message_args: message class args
         - handler: handler class
     """
+    
     TIMEOUT_READ = 5
     TIMEOUT_CONNECT = TIMEOUT_READ
     INIT_STRING = "start"
     BROADCAST_STRING = "broadcast"
 
     def __init__(
-            self,
-            tg_key: str,
-            start_message: str = INIT_STRING,
-            broadcast_string: str = BROADCAST_STRING
+        self,
+        tg_key: str,
+        start_message: str = INIT_STRING,
+        broadcast_string: str = BROADCAST_STRING
     ) -> None:
         """
         Session object constructor.
@@ -60,8 +61,10 @@ class Session:
         self.updater = telegram.ext.Updater(
             tg_key,
             use_context=True,
-            request_kwargs={"read_timeout": self.TIMEOUT_READ,
-                            "connection_timeout": self.TIMEOUT_CONNECT}
+            request_kwargs={
+                "read_timeout": self.TIMEOUT_READ,
+                "connection_timeout": self.TIMEOUT_CONNECT,
+            },
         )
 
         bot: Bot = self.updater.bot
@@ -72,8 +75,9 @@ class Session:
             logger.info(
                 f"Connected to Telegram bot {bot.name}({bot.first_name})")
         except Unauthorized as error:
-            raise AttributeError(f"Bot matching by key "
-                                 f"{tg_key} not found.") from error
+            raise AttributeError(
+                f"Bot matching by key {tg_key} not found."
+            ) from error
 
         self._tg_key = tg_key
         self.sessions: List[Handler] = []
@@ -83,34 +87,41 @@ class Session:
 
         # add command handlers
         dispatcher.add_handler(
-            CommandHandler(start_message, self._on_start_message))
+            CommandHandler(start_message, self._on_start_message)
+        )
 
         dispatcher.add_handler(
-            CommandHandler(broadcast_string, self._on_start_message))
+            CommandHandler(broadcast_string, self._on_start_message)
+        )
 
         dispatcher.add_handler(
-            MessageHandler(telegram.ext.Filters.text,
-                           self._on_button_callback))
+            MessageHandler(telegram.ext.Filters.text, self._on_button_callback)
+        )
 
         dispatcher.add_handler(
-            MessageHandler(telegram.ext.Filters.status_update.web_app_data,
-                           self._on_web_callback))
-
-        dispatcher.add_handler((
-            CallbackQueryHandler(self._on_inline_callback)))
+            MessageHandler(
+                telegram.ext.Filters.status_update.web_app_data, 
+                self._on_web_callback,
+            )
+        )
 
         dispatcher.add_handler(
-            telegram.ext.PollAnswerHandler(self._on_poll_answer))
+            CallbackQueryHandler(self._on_inline_callback)
+        )
+
+        dispatcher.add_handler(
+            telegram.ext.PollAnswerHandler(self._on_poll_answer)
+        )
 
         dispatcher.add_error_handler(self._on_error)
 
     def start(
-            self,
-            start_message: Type[ABCMessage],
-            start_message_args: Optional[List[Any]] = None,
-            polling: bool = True,
-            idle: bool = False,
-            navigation_handler_class: Optional[Type["Handler"]] = None
+        self,
+        start_message: Type[ABCMessage],
+        start_message_args: Optional[List[Any]] = None,
+        polling: bool = True,
+        idle: bool = False,
+        navigation_handler_class: Optional[Type["Handler"]] = None
     ) -> None:
         """
         Activate scheduler and dispatcher.
