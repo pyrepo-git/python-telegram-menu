@@ -34,6 +34,7 @@ class ButtonTypes(Enum):
     """
     Button types.
     """
+    
     NOTIFICATION = auto()
     MESSAGE = auto()
     PICTURE = auto()
@@ -181,10 +182,7 @@ class ABCMessage(ABC):
         """
         self.add_button(label="Back", callback=None, **kwargs)
 
-    def add_button_home(
-            self,
-            **kwargs
-    ) -> None:
+    def add_button_home(self, **kwargs) -> None:
         """
         Add a button to go back to main menu.
 
@@ -223,8 +221,8 @@ class ABCMessage(ABC):
             self.keyboard.append(
                 [
                     Button(
-                        label, 
-                        callback, 
+                        label,
+                        callback,
                         button_type,
                         args,
                         send_notification,
@@ -235,11 +233,11 @@ class ABCMessage(ABC):
         else:
             self.keyboard[-1].append(
                 Button(
-                    label, 
-                    callback, 
-                    button_type, 
-                    args, 
-                    send_notification, 
+                    label,
+                    callback,
+                    button_type,
+                    args,
+                    send_notification,
                     web_url,
                 )
             )
