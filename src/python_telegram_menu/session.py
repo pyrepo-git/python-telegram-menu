@@ -45,7 +45,7 @@ class Session:
         self,
         tg_key: str,
         start_message: str = INIT_STRING,
-        broadcast_string: str = BROADCAST_STRING
+        broadcast_string: str = BROADCAST_STRING,
     ) -> None:
         """
         Session object constructor.
@@ -208,7 +208,7 @@ class Session:
         )
 
     def _on_button_callback(
-            self, update: Update, context: CallbackContext
+        self, update: Update, context: CallbackContext
     ) -> None:
         """
         Select menu item
@@ -233,10 +233,10 @@ class Session:
 
         session = next(
             (
-                x 
+                x
                 for x in self.sessions
                 if x.user_name == update.effective_user.first_name
-            ), 
+            ),
             None,
         )
 
@@ -244,7 +244,7 @@ class Session:
             session.poll_answer(update.poll_answer.option_ids[0])
 
     def _on_inline_callback(
-            self, update: Update, context: CallbackContext
+        self, update: Update, context: CallbackContext
     ) -> None:
         """
         Select and execute inline callback.
@@ -263,7 +263,7 @@ class Session:
         )
 
     def on_broadcast_message(
-            self, message: str, notification: bool = True
+        self, message: str, notification: bool = True
     ) -> List[telegram.Message]:
         """
         Broadcast messages for all sessions.
@@ -276,7 +276,7 @@ class Session:
         return messages
 
     def on_broadcast_picture(
-            self, picture_path: str, notification: bool = True
+        self, picture_path: str, notification: bool = True
     ) -> List[telegram.Message]:
         """
         Broadcast picture messages.
@@ -310,7 +310,7 @@ class Session:
             raise AttributeError("Incorrect update object")
 
         error = (
-            str(context.error) 
+            str(context.error)
             if update is None
             else f"Update {update.update_id} - {str(context.error)}"
         )
