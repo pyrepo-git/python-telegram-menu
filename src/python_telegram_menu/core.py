@@ -273,21 +273,22 @@ class ABCMessage(ABC):
                         button_object(
                             text=btn.label,
                             web_app=WebAppInfo(url=btn.web_url),
-                            callback_data=f"{self.label}.{btn.label},"
+                            callback_data=f"{self.label}.{btn.label}",
                         )
                     )
                 else:
                     button_array.append(
                         button_object(
                             text=btn.label,
-                            callback_data=f"{self.label}.{btn.label}"
+                            callback_data=f"{self.label}.{btn.label}",
                         )
                     )
             keyboard_buttons.append(button_array)
 
             if inlined:
-                return InlineKeyboardMarkup(inline_keyboard=keyboard_buttons,
-                                            resize_keyboard=False)
+                return InlineKeyboardMarkup(
+                    inline_keyboard=keyboard_buttons, resize_keyboard=False
+                )
 
             if self.input_field and self.input_field != "<disable>":
                 return ReplyKeyboardMarkup(
@@ -295,8 +296,9 @@ class ABCMessage(ABC):
                     resize_keyboard=True,
                     input_field_placeholder=self.input_field)
 
-            return ReplyKeyboardMarkup(keyboard=keyboard_buttons,
-                                       resize_keyboard=True)
+            return ReplyKeyboardMarkup(
+                keyboard=keyboard_buttons, resize_keyboard=True
+            )
 
     def init_date_time(self) -> None:
         """
@@ -310,8 +312,9 @@ class ABCMessage(ABC):
             - True: if message date time is expired
         """
         if self.date_time is not None:
-            return self.date_time + self.expiry_period \
-                   < datetime.datetime.now()
+            return (
+                self.date_time + self.expiry_period < datetime.datetime.now()
+            )
         return False
 
     def kill_message(self) -> None:
