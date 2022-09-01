@@ -9,7 +9,9 @@ __version__ = "0.0.1"
 __title__ = "python_telegram_menu"
 __description__ = "A python library to generate menus using Telegram Bot API."
 __url__ = "https://github.com/pyrepo-git/python_telegram_menu"
-__raw_url__ = "https://github.com/pyrepo-git/python_telegram_menu"  # need to delete or change
+__raw_url__ = (
+    "https://github.com/pyrepo-git/python_telegram_menu"
+)
 __author__ = "Valeri Zimin"
 __author_email__ = "valerizimin@gmail.com"
 __license__ = "GNU GPLv3"
