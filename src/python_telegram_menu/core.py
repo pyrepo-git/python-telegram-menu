@@ -249,7 +249,7 @@ class ABCMessage(ABC):
         return self.notification.edit_message(self)
 
     def gen_keyboard_content(
-            self, inlined: Optional[bool] = None
+        self, inlined: Optional[bool] = None
     ) -> Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]:
         """
         Generate keyboard content.
