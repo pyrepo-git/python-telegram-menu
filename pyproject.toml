@@ -19,3 +19,7 @@ ignore = [
     'pytest.ini',
     'CODE_OF_CONDUCT.md',
 ]
+
+[build-system]
+requires = ["setuptools>=46.1.0", "setuptools-scm", "wheel"]
+build-backend = "setuptools.build_meta:__legacy__"
