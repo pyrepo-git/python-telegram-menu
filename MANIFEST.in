@@ -1,5 +1,6 @@
 graft src
 
 include LICENSE
+include requirements.txt
 
 global-exclude __pycache__ *.py[cod]
