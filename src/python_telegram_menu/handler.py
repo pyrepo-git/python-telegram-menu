@@ -32,12 +32,13 @@ class Handler:
     """
     Handle requests telegram bot requests.
     """
+    
     POLL_DEALING = 10  # seconds
     MESSAGE_CHECK_TIMEOUT = POLL_DEALING
     CONNECTION_POOL_SIZE = 8
 
     def __init__(
-            self, tg_key: str, chat: Chat, scheduler: BaseScheduler
+        self, tg_key: str, chat: Chat, scheduler: BaseScheduler
     ) -> None:
         """
         Handler class initialization.
@@ -235,7 +236,7 @@ class Handler:
         keyboard: Optional[
             Union[ReplyKeyboardMarkup, InlineKeyboardMarkup]
         ] = None,
-        notification: bool = True
+        notification: bool = True,
     ) -> telegram.Message:
         """
         Send text message with HTML formatting.
@@ -248,10 +249,7 @@ class Handler:
             disable_notification=not notification
         )
 
-    def edit_message(
-            self,
-            message: ABCMessage
-    ) -> bool:
+    def edit_message(self, message: ABCMessage) -> bool:
         """
         Edit inline message asynchronously.
         """
@@ -271,7 +269,7 @@ class Handler:
                 chart_id=self.chat_id,
                 message_id=mes.message_id,
                 parse_mode=ParseMode.HTML,
-                reply_markup=keyboard_format
+                reply_markup=keyboard_format,
             )
         except telegram.error.BadRequest as error:
             logger.error(error)
@@ -332,17 +330,23 @@ class Handler:
         Execute web app callback.
         """
         last_menu = self._menu_queue[-1]
-        webapp_message = next(iter(y for x in last_menu.keyboard
-                                   for y in x if y.label == button_text), None)
+        webapp_message = next(
+            iter(
+                y 
+                for x in last_menu.keyboard
+                for y in x 
+                if y.label == button_text
+            ), 
+            None,
+        )
         if webapp_message is not None and callable(webapp_message.callback):
             html_response = webapp_message.callback(webapp_data)
-            self.send_message(html_response,
-                              notification=webapp_message.notification)
+            self.send_message(
+                html_response, notification=webapp_message.notification
+            )
 
     def app_message_button_callback(
-            self,
-            callback_label: str,
-            callback_id: str
+            self, callback_label: str, callback_id: str
     ) -> None:
         """
         Execute action after message button selected.
