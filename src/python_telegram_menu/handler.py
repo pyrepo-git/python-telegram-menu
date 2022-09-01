@@ -332,11 +332,11 @@ class Handler:
         last_menu = self._menu_queue[-1]
         webapp_message = next(
             iter(
-                y 
+                y
                 for x in last_menu.keyboard
-                for y in x 
+                for y in x
                 if y.label == button_text
-            ), 
+            ),
             None,
         )
         if webapp_message is not None and callable(webapp_message.callback):
@@ -346,15 +346,16 @@ class Handler:
             )
 
     def app_message_button_callback(
-            self, callback_label: str, callback_id: str
+        self, callback_label: str, callback_id: str
     ) -> None:
         """
         Execute action after message button selected.
         """
         label_message, label_action = callback_label.split(".")
-        log_message = \
-            self.filter_unicode(f"Received action request from "
-                                f"'{label_message}':'{label_action}'")
+        log_message = self.filter_unicode(
+            f"Received action request from "
+            f"'{label_message}':'{label_action}'"
+        )
         logger.info(log_message)
 
         message = self.get_message(label_message)
@@ -368,17 +369,19 @@ class Handler:
             return
 
         if bt_found.button_type in [ButtonTypes.PICTURE, ButtonTypes.STICKER]:
-            self._bot.send_chat_action(chat_id=self.chat_id,
-                                       action=ChatAction.UPLOAD_PHOTO)
+            self._bot.send_chat_action(
+                chat_id=self.chat_id, action=ChatAction.UPLOAD_PHOTO
+            )
         elif bt_found.button_type == ButtonTypes.MESSAGE:
-            self._bot.send_chat_action(chat_id=self.chat_id,
-                                       action=ChatAction.TYPING)
+            self._bot.send_chat_action(
+                chat_id=self.chat_id, action=ChatAction.TYPING
+            )
         elif bt_found.button_type == ButtonTypes.POLL:
-            self.send_poll(question=bt_found.args[0],
-                           options=bt_found.args[1])
+            self.send_poll(question=bt_found.args[0], options=bt_found.args[1])
             self._poll_callback = bt_found.callback
-            self._bot.answer_callback_query(callback_id,
-                                            text="Select an answer...")
+            self._bot.answer_callback_query(
+                callback_id, text="Select an answer..."
+            )
             return
 
         if bt_found.args is not None:
@@ -388,8 +391,9 @@ class Handler:
 
         # send picture if custom label found
         if bt_found.button_type == ButtonTypes.PICTURE:
-            self.send_photo(picture_path=action_status,
-                            notification=bt_found.notification)
+            self.send_photo(
+                picture_path=action_status, notification=bt_found.notification
+            )
             self._bot.answer_callback_query(callback_id, text="Picture sent!")
             return
         if bt_found.button_type == ButtonTypes.STICKER:
@@ -398,8 +402,9 @@ class Handler:
             self._bot.answer_callback_query(callback_id, text="Sticker sent!")
             return
         if bt_found.button_type == ButtonTypes.MESSAGE:
-            self.send_message(action_status,
-                              notification=bt_found.notification)
+            self.send_message(
+                action_status, notification=bt_found.notification
+            )
             self._bot.answer_callback_query(callback_id, text="Message sent!")
             return
         self._bot.answer_callback_query(callback_id, text=action_status)
@@ -409,56 +414,51 @@ class Handler:
         self.edit_message(message)
 
     def send_photo(
-            self,
-            picture_path: str,
-            notification: bool = True
+        self, picture_path: str, notification: bool = True
     ) -> Optional[telegram.Message]:
         """
         Send picture.
         """
         picture_object = self._picture_check_replace(picture_path=picture_path)
         try:
-            return self._bot.send_photo(chat_id=self.chat_id,
-                                        photo=picture_object,
-                                        disable_notification=not notification)
+            return self._bot.send_photo(
+                chat_id=self.chat_id, 
+                photo=picture_object,
+                disable_notification=not notification
+            )
         except telegram.error.BadRequest as error:
             logger.error(f"Failed send picture {picture_path}:{error}")
 
         return None
 
     def send_sticker(
-            self,
-            sticker_path: str,
-            notification: bool = True
+        self, sticker_path: str, notification: bool = True
     ) -> Optional[telegram.Message]:
         """
         Send sticker.
         """
         sticker_object = self._sticker_check_replace(sticker_path=sticker_path)
         try:
-            return self._bot.send_sticker(chat_id=self.chat_id,
-                                          sticker=sticker_object,
-                                          disable_notification=not notification
-                                          )
+            return self._bot.send_sticker(
+                chat_id=self.chat_id,
+                sticker=sticker_object,
+                disable_notification=not notification
+            )
         except telegram.error.BadRequest as error:
             logger.error(f"failed send sticker {sticker_path}:{error}")
 
         return None
 
-    def get_message(
-            self,
-            label: str
-    ) -> Optional[ABCMessage]:
+    def get_message(self, label: str) -> Optional[ABCMessage]:
         """
         Get message from message queue by attribute label.
         """
-        return next(iter(x for x in self._message_queue
-                         if x.label == label), None)
+        return next(
+            iter(x for x in self._message_queue if x.label == label), None
+        )
 
     def send_poll(
-            self,
-            question: str,
-            options: List[str]
+        self, question: str, options: List[str]
     ) -> None:
         """
         Send poll to user with questions and options.
@@ -472,7 +472,7 @@ class Handler:
             question=emoji_replace(question),
             options=options,
             is_anonymous=False,
-            open_period=self.POLL_DEALING
+            open_period=self.POLL_DEALING,
         )
 
         next_time = datetime.datetime.now()
@@ -486,9 +486,7 @@ class Handler:
             replace_existing=True
         )
 
-    def poll_delete(
-            self
-    ) -> None:
+    def poll_delete(self) -> None:
         """
         On poll timeout expired.
         """
@@ -496,17 +494,14 @@ class Handler:
             try:
                 logger.info(f"Deleting poll '{self._poll.poll.question}'")
                 self._bot.delete_message(
-                    chat_id=self.chat_id,
-                    message_id=self._poll.message_id
+                    chat_id=self.chat_id, message_id=self._poll.message_id
                 )
             except telegram.error.BadRequest:
-                logger.error(f"Poll message {self._poll.message_id} "
-                             f"already deleted")
+                logger.error(
+                    f"Poll message {self._poll.message_id} already deleted"
+                )
 
-    def poll_answer(
-            self,
-            answer_id: int
-    ) -> None:
+    def poll_answer(self, answer_id: int) -> None:
         """
         Run when received poll message.
         """
