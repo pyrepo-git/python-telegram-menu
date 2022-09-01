@@ -167,13 +167,11 @@ class ABCMessage(ABC):
         Raises:
             - EnvironmentError : too many buttons matching label
         """
-        return next(iter(y for x in self.keyboard
-                         for y in x if y.label == label), None)
+        return next(
+            iter(y for x in self.keyboard for y in x if y.label == label), None
+        )
 
-    def add_button_back(
-            self,
-            **kwargs: Any
-    ) -> None:
+    def add_button_back(self, **kwargs: Any) -> None:
         """
         Add a button to go back to previous menu.
 
@@ -197,14 +195,14 @@ class ABCMessage(ABC):
         self.add_button(label="Home", callback=None, **kwargs)
 
     def add_button(
-            self,
-            label: str,
-            callback: TypeCallback = None,
-            button_type: ButtonTypes = ButtonTypes.NOTIFICATION,
-            args: Any = None,
-            send_notification: bool = False,
-            add_row: bool = False,
-            web_url: str = ""
+        self,
+        label: str,
+        callback: TypeCallback = None,
+        button_type: ButtonTypes = ButtonTypes.NOTIFICATION,
+        args: Any = None,
+        send_notification: bool = False,
+        add_row: bool = False,
+        web_url: str = "",
     ) -> None:
         """
         Add button to keyboard container.
@@ -222,11 +220,29 @@ class ABCMessage(ABC):
         if not isinstance(self.keyboard, list) or not self.keyboard:
             self.keyboard = [[]]
         if add_row or len(self.keyboard[-1]) == buttons_per_row:
-            self.keyboard.append([Button(label, callback, button_type,
-                                         args, send_notification, web_url)])
+            self.keyboard.append(
+                [
+                    Button(
+                        label, 
+                        callback, 
+                        button_type,
+                        args,
+                        send_notification,
+                        web_url,
+                    )
+                ]
+            )
         else:
-            self.keyboard[-1].append(Button(label, callback, button_type,
-                                            args, send_notification, web_url))
+            self.keyboard[-1].append(
+                Button(
+                    label, 
+                    callback, 
+                    button_type, 
+                    args, 
+                    send_notification, 
+                    web_url,
+                )
+            )
 
     def edit_message(self) -> bool:
         """
