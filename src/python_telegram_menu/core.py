@@ -32,6 +32,7 @@ class ButtonTypes(Enum):
     """
     Button types.
     """
+
     NOTIFICATION = auto()
     MESSAGE = auto()
     PICTURE = auto()
@@ -51,6 +52,7 @@ class Button:
         - notification: send notification to user
         - web_url - web application
     """
+    
     def __init__(
         self,
         label: str,
