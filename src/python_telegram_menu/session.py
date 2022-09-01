@@ -36,6 +36,7 @@ class Session:
         - handler: handler class
     """
     
+    
     TIMEOUT_READ = 5
     TIMEOUT_CONNECT = TIMEOUT_READ
     INIT_STRING = "start"
