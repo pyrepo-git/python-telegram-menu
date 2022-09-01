@@ -294,7 +294,8 @@ class ABCMessage(ABC):
                 return ReplyKeyboardMarkup(
                     keyboard=keyboard_buttons,
                     resize_keyboard=True,
-                    input_field_placeholder=self.input_field)
+                    input_field_placeholder=self.input_field,
+                )
 
             return ReplyKeyboardMarkup(
                 keyboard=keyboard_buttons, resize_keyboard=True
