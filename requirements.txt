@@ -1,7 +1,6 @@
-dataclasses~=0.6
-emoji~=2.0.0
-# python-telegram-bot>=13.13
+dataclasses
+emoji
 python-telegram-bot
-validators~=0.20.0
-setuptools~=63.2.0
-click~=8.1.3
+validators
+setuptools
+click
