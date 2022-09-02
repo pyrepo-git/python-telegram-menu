@@ -1,7 +1,7 @@
 import logging
 import click
 
-from version import __version__
+from .version import __version__
 
 
 logging.basicConfig()
