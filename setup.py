@@ -11,8 +11,9 @@ extras_require = {
         "pre-commit",
         "black",
         "flake8",
-        "emoji",
         "twine",
+        "emoji",
+        "python-telegram-bot",
     ],
 }
 extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
