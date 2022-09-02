@@ -11,6 +11,7 @@ extras_require = {
         "pre-commit",
         "black",
         "flake8",
+        "emoji",
         "twine",
     ],
 }
