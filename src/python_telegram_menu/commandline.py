@@ -1,7 +1,7 @@
 import logging
 import click
 
-from python_telegram_menu import __version__
+from version import __version__
 
 
 logging.basicConfig()
