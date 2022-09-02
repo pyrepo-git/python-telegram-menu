@@ -11,7 +11,7 @@ from .session import Session
 
 __all__ = [
     "__version__",
-    "VERSION"
+    "VERSION",
     "Handler",
     "Session",
     "ButtonTypes",
