@@ -12,8 +12,6 @@ extras_require = {
         "black",
         "flake8",
         "twine",
-        "emoji",
-        "python-telegram-bot",
         "validators",
         "click",
     ],
