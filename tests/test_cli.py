@@ -1,4 +1,5 @@
 import shlex
+import python_telegram_menu
 import time
 
 
