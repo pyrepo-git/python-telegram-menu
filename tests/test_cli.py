@@ -11,5 +11,5 @@ def test_version(script_runner):
     assert ret.success
     assert python_telegram_menu.__version__ in ret.stdout
     assert ret.stderr == ""
-    make sure it took less than a second
+    # make sure it took less than a second
     assert elapsed < 1.0
