@@ -3,9 +3,9 @@ from setuptools import setup
 extras_require = {
     "develop": [
         "check-manifest",
-        "pytest>=7.1.2",
-        "pytest-cov>=3.0.0",
-        "pytest-console-scripts>=1.3.1",
+        "pytest",
+        "pytest-cov>",
+        "pytest-console-scripts",
         "bumpversion>=0.6.0",
         "pyflakes",
         "pre-commit",
@@ -15,6 +15,7 @@ extras_require = {
         "emoji",
         "python-telegram-bot",
         "validators",
+        "click",
     ],
 }
 extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
