@@ -1,6 +1,2 @@
-dataclasses
 emoji
 python-telegram-bot
-validators
-setuptools
-click
