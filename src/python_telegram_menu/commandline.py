@@ -1,10 +1,10 @@
 import logging
 import click
-import vertion
+import version
 
 
 from importlib import reload
-reload(vertion)
+reload(version)
 
 #from version import __version__
 
