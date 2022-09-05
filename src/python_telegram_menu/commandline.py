@@ -1,7 +1,12 @@
 import logging
 import click
+import .vertion
 
-from .version import __version__
+
+from importlib import reload
+reload(.vertion)
+
+#from .version import __version__
 
 
 logging.basicConfig()
@@ -9,7 +14,7 @@ log = logging.getLogger(__name__)
 
 
 @click.group(context_settings=dict(help_option_names=["-h", "--help"]))
-@click.version_option(version=__version__)
+@click.version_option(version=.version.__version__)
 def main():
     print("Hellow from my menu package!")
 
