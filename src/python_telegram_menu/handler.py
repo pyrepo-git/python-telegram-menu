@@ -21,7 +21,7 @@ from telegram import Message, ReplyKeyboardMarkup
 from telegram.parsemode import ParseMode
 from telegram.utils.request import Request
 
-from .version import __raw_url__
+from ._version import __raw_url__
 from .core import ABCMessage, ButtonTypes
 from .core import TypeCallback, emoji_replace
 
