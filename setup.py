@@ -5,8 +5,8 @@ from setuptools import setup
 
 def get_version(version_tuple):
     if not isinstance(version_tuple[-1], int):
-        return '.'.join(map(str, version_tuple[:-1])) + version_tuple[-1]
-    return '.'.join(map(str, version_tuple))
+        return ".".join(map(str, version_tuple[:-1])) + version_tuple[-1]
+    return ".".join(map(str, version_tuple))
 
 
 init = os.path.join(
