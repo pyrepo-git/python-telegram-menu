@@ -21,7 +21,7 @@ extras_require = {
 extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
 
 setup(
-    version=python_telegram_menu.__version__
+    version=python_telegram_menu.__version__,
     extras_require=extras_require,
     entry_points={
         "console_scripts": [
