@@ -10,7 +10,7 @@ def get_version(version_tuple):
 
 
 init = os.path.join(
-    os.path.dirname(__file__), 'src', 'python_telegram_menu','_version.py'
+    os.path.dirname(__file__), "src", "python_telegram_menu", "_version.py"
 )
 
 version_line = list(filter(lambda l: l.startswith("VERSION"), open(init)))[0]
