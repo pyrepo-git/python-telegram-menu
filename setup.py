@@ -2,16 +2,14 @@ import os.path
 
 from setuptools import setup
 
+
 def get_version(version_tuple):
     if not isinstance(version_tuple[-1], int):
-        return '.'.join(
-            map(str, version_tuple[:-1])
-        ) + version_tuple[-1]
+        return '.'.join(map(str, version_tuple[:-1])) + version_tuple[-1]
     return '.'.join(map(str, version_tuple))
     
 init = os.path.join(
-    os.path.dirname(__file__), 'src', 'python_telegram_menu',
-    '_version.py'
+    os.path.dirname(__file__), 'src', 'python_telegram_menu','_version.py'
 )
     
 version_line = list(
