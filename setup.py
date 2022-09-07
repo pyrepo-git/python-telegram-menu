@@ -1,5 +1,4 @@
-import python_telegram_menu
-
+from python_telegram_menu import __version__
 from setuptools import setup
 
 extras_require = {
@@ -23,7 +22,7 @@ extras_require = {
 extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
 
 setup(
-    version=python_telegram_menu.__version__,
+    version=__version__,
     extras_require=extras_require,
     entry_points={
         "console_scripts": [
