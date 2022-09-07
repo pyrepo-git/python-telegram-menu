@@ -10,7 +10,7 @@ def get_version(version_tuple):
     return '.'.join(map(str, version_tuple))
     
     init = os.path.join(
-        os.path.dirname(__file__), 'src', 'some_package',
+        os.path.dirname(__file__), 'src', 'python_telegram_menu',
         '__init__.py'
     )
     
