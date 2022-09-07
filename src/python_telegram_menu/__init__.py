@@ -3,14 +3,11 @@
 """
  Python telegram menu interfaces.
  """
-import ._version
-
 from ._version import __version__, VERSION
+from ._version import as PKG_VERSION
 from .core import ButtonTypes, Button, ABCMessage
 from .handler import Handler
 from .session import Session
-
-PKG_VERSION=VERSION
 
 __all__ = [
     "__version__",
