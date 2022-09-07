@@ -4,7 +4,6 @@
  Python telegram menu interfaces.
  """
 from ._version import __version__, VERSION
-from ._version import as PKG_VERSION
 from .core import ButtonTypes, Button, ABCMessage
 from .handler import Handler
 from .session import Session
