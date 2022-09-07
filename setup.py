@@ -1,7 +1,7 @@
 from setuptools import setup
 
 
-__version__ = "0.0.1"
+pkg_version = "0.0.1"
 
 extras_require = {
     "develop": [
@@ -24,7 +24,7 @@ extras_require = {
 extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
 
 setup(
-    version=__version__,
+    version=pkg_version,
     extras_require=extras_require,
     entry_points={
         "console_scripts": [
