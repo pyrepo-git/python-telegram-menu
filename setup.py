@@ -1,21 +1,24 @@
-import codecs
 import os.path
 
 from setuptools import setup
 
-def read(rel_path):
-    here = os.path.abspath(os.path.dirname(__file__))
-    with codecs.open(os.path.join(here, rel_path), 'r') as fp:
-        return fp.read()
+def get_version(version_tuple):
+    if not isinstance(version_tuple[-1], int):
+        return '.'.join(
+            map(str, version_tuple[:-1])
+        ) + version_tuple[-1]
+    return '.'.join(map(str, version_tuple))
+    
+    init = os.path.join(
+        os.path.dirname(__file__), 'src', 'some_package',
+        '__init__.py'
+    )
+    version_line = list(
+        filter(lambda l: l.startswith('VERSION'), open(init))
+    )[0]
 
-def get_version(rel_path):
-    for line in read(rel_path).splitlines():
-        if line.startswith('__version__'):
-            delim = '"' if '"' in line else "'"
-            return line.split(delim)[1]
-    else:
-        raise RuntimeError("Unable to find version string.")
-
+PKG_VERSION = get_version(eval(version_line.split('=')[-1]))
+    
 extras_require = {
     "develop": [
         "check-manifest",
@@ -37,7 +40,7 @@ extras_require = {
 extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
 
 setup(
-    version=get_version("__init__.py"),
+    version=PKG_VERSION,
     extras_require=extras_require,
     entry_points={
         "console_scripts": [
