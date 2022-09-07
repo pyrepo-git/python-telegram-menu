@@ -1,3 +1,5 @@
+import python_telegram_menu
+
 from setuptools import setup
 
 extras_require = {
