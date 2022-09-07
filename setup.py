@@ -37,7 +37,7 @@ extras_require = {
 extras_require["complete"] = sorted(set(sum(extras_require.values(), [])))
 
 setup(
-    version=get_version("python_telegram_menu/__init__.py"),
+    version=get_version("./__init__.py"),
     extras_require=extras_require,
     entry_points={
         "console_scripts": [
