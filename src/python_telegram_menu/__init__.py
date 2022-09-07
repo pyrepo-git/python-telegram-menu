@@ -9,7 +9,7 @@ from .core import ButtonTypes, Button, ABCMessage
 from .handler import Handler
 from .session import Session
 
-PKG_VERSION = VERSION
+PKG_VERSION=_version.VERSION
 
 __all__ = [
     "__version__",
