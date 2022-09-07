@@ -13,9 +13,10 @@ def get_version(version_tuple):
         os.path.dirname(__file__), 'src', 'some_package',
         '__init__.py'
     )
-    version_line = list(
-        filter(lambda l: l.startswith('VERSION'), open(init))
-    )[0]
+    
+version_line = list(
+    filter(lambda l: l.startswith('VERSION'), open(init))
+)[0]
 
 PKG_VERSION = get_version(eval(version_line.split('=')[-1]))
     
