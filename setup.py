@@ -1,5 +1,7 @@
-from python_telegram_menu import __version__
 from setuptools import setup
+
+
+__version__ = 0.0.1
 
 extras_require = {
     "develop": [
