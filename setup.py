@@ -15,7 +15,7 @@ init = os.path.join(
 )
     
 version_line = list(
-    filter(lambda l: l.startswith('VERSION'), open(init))
+    filter(lambda l: l.startswith('PKG_VERSION'), open(init))
 )[0]
 
 PKG_VERSION = get_version(eval(version_line.split('=')[-1]))
