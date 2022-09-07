@@ -3,7 +3,7 @@ import os.path
 from setuptools import setup
 
 
-def get_version(version_tuple):
+def get_version(version_tuple: tuple) -> str:
     if not isinstance(version_tuple[-1], int):
         return ".".join(map(str, version_tuple[:-1])) + version_tuple[-1]
     return ".".join(map(str, version_tuple))
