@@ -3,6 +3,7 @@
 """
  Python telegram menu interfaces.
  """
+import ._version
 
 from ._version import __version__, VERSION
 from .core import ButtonTypes, Button, ABCMessage
