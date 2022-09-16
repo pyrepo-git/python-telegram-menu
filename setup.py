@@ -22,7 +22,7 @@ extras_require = {
     "develop": [
         "check-manifest",
         "pytest",
-        "pytest-cov>",
+        "pytest-cov",
         "pytest-console-scripts",
         "bumpversion>=0.6.0",
         "pyflakes",
