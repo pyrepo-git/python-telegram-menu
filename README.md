@@ -2,7 +2,7 @@
 
 Python package for Telegram menus, based on Telegram Bot API. 
 
-Soon, I will add tests with examples of the packege use.
+Soon, I'll add tests with examples of the packege use.
 
 Also I'm plan add descriptions to README.md and directory with examples.
 
