@@ -262,7 +262,7 @@ class Session:
             update.callback_query.data, update.callback_query.id
         )
 
-    def on_broadcast_message(
+    def _on_broadcast_message(
         self, message: str, notification: bool = True
     ) -> List[telegram.Message]:
         """
@@ -275,7 +275,7 @@ class Session:
                 messages.append(mes)
         return messages
 
-    def on_broadcast_picture(
+    def _on_broadcast_picture(
         self, picture_path: str, notification: bool = True
     ) -> List[telegram.Message]:
         """
@@ -288,7 +288,7 @@ class Session:
                 messages.append(mes)
         return messages
 
-    def on_broadcast_sticker(
+    def _on_broadcast_sticker(
         self, sticker_path: str, notification: bool = True
     ) -> List[telegram.Message]:
         """

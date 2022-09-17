@@ -1,2 +1,5 @@
 emoji
 python-telegram-bot
+
+APScheduler
+setuptools
