@@ -10,4 +10,4 @@ class TestHandler(Handler):
         """
         Return to previous menu keyboard
         """
-        return self.select_menu_button('Back')
+        return self.select_menu_button("Back")
