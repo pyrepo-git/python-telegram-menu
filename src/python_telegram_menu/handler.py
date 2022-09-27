@@ -21,10 +21,10 @@ from telegram import Message, ReplyKeyboardMarkup
 from telegram.parsemode import ParseMode
 from telegram.utils.request import Request
 
-from ._version import __raw_url__
 from .core import ABCMessage, ButtonTypes
 from .core import TypeCallback, emoji_replace
 
+HOME_URL = "https://github.com/pyrepo-git/python_telegram_menu"
 logger = logging.getLogger(__name__)
 
 
@@ -110,7 +110,7 @@ class Handler:
                     return file_h.read()
             raise ValueError("Pats is not a picture")
         except ValueError:
-            url_default = f"{__raw_url__}/resources/stats_default.webp"
+            url_default = f"{HOME_URL}/resources/stats_default.webp"
             logger.error(
                 f"Picture path '{sticker_path}' not valid."
                 f"Replaced by default {url_default}"
@@ -138,7 +138,7 @@ class Handler:
             raise ValueError("Url not picture path")
 
         except ValueError:
-            url_default = f"{__raw_url__}/resources/stats_default.png"
+            url_default = f"{HOME_URL}/resources/stats_default.png"
             logger.error(
                 f"Picture path '{picture_path}' invalid."
                 f"Replaced by default {url_default}"
