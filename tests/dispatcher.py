@@ -6,14 +6,8 @@ import logging
 from pathlib import Path
 from typing import Any, Callable, List, Optional, Union
 
-try:
-    from typing_extensions import TypedDict
-except ImportError:
-    from typing import TypedDict
 
 from python_telegram_menu import (
-    Session,
-    Handler,
     ABCMessage,
     ButtonTypes,
     Button,
@@ -27,6 +21,25 @@ UpdateCallback = Callable[[Any], None]
 
 ROOT_FOLDER = Path(__file__).parent.parent
 TEST_URL = "https://github.com/pyrepo-git/python_telegram_menu"
+
+
+def html_format(args: KeyboardContent) -> str:
+    """
+    Format strings to html.
+    """
+    content = ""
+    for line in args:
+        if not isinstance(line, list):
+            content += f"<b>{line}</b>"
+            continue
+        if line[0]:
+            content += f"<b>{line[0]}</b>"
+            if line[1]:
+                content += ": "
+        if line[1]:
+            content += line[1]
+        content += "\n"
+    return content
 
 
 class InlineMessage(ABCMessage):
@@ -77,7 +90,7 @@ class InlineMessage(ABCMessage):
         """
         self._toggle_play_button()
         data: KeyboardContent = [["text1", "value1"], ["text2", "value2"]]
-        return format_list(data)
+        return html_format(data)
 
     def sticker_default(self) -> str:
         """
