@@ -1,3 +1,7 @@
+"""
+Test handler
+"""
+
 from python_telegram_menu import Handler
 
 
