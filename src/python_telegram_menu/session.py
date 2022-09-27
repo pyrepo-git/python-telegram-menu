@@ -214,7 +214,7 @@ class Session:
         Select menu item
         """
         if update.effective_chat is None:
-            raise AttributeError("Error! Chat object nut found.")
+            raise AttributeError("Error! Chat object not found.")
 
         session = self.get_session(update.effective_chat.id)
 
@@ -222,7 +222,7 @@ class Session:
             self._on_start_message(update, context)
             return
 
-        session.select_menu_button(update.message.text)
+        session.select_button(update.message.text)
 
     def _on_poll_answer(self, update: Update, _: CallbackContext) -> None:
         """

@@ -276,7 +276,7 @@ class Handler:
             return False
         return True
 
-    def select_menu_button(self, label: str) -> Optional[int]:
+    def select_button(self, label: str) -> Optional[int]:
         """
         Menu button by label.
         """
