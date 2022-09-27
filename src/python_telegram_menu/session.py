@@ -222,7 +222,7 @@ class Session:
             self._on_start_message(update, context)
             return
 
-        session.select_button(update.message.text)
+        session.select_menu_button(update.message.text)
 
     def _on_poll_answer(self, update: Update, _: CallbackContext) -> None:
         """
